@@ -1,11 +1,14 @@
 import { useMemo, useState } from "react";
 import * as d3 from "d3";
+import { useMode } from "../context/ModeContext";
 
 type Node = { id: number; x: number; y: number};
 
 export function Node() {
   const width = 800;
   const height = 300;
+
+  const mode = useMode();
 
   // Example data (replace with your real union-find state)
   const nodes: Node[] = Array.from({ length: 2 }, (_, i) => ({

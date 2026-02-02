@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
 import * as d3 from "d3";
+import { useMode } from "../context/ModeContext";
 
 type Edge = { startNode: Node; endNode: Node};
 
 export function Edge() {
+    const mode = useMode();
 
     const edge = {
         startNode: null,
