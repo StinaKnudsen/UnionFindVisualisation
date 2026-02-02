@@ -1,8 +1,8 @@
 import './App.css'
 import { useMemo, useState } from "react";
 import { Node } from "./components/Node";
-import type { GraphNode } from "./components/Node";
 import { Edge } from "./components/Edge";
+import type { GraphNode } from "./components/Node";
 import type { GraphEdge } from "./components/Edge";
 import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
@@ -12,13 +12,48 @@ function App() {
   
   const [mode, setMode] = useState<Mode>("create");
 
-  const nodes: GraphNode[] = [
-  { id: 0, x: 80, y: 150 },
-  { id: 1, x: 180, y: 150 },
-];
+  const nodes: GraphNode[] = Array.from({ length: 10 }, (_, i) => ({
+    id: i,
+    x: 80 + i * 100,
+    y: 150
+  }));
 
-  const edge: GraphEdge = { startNode: nodes[0], endNode: nodes[1] };
+  const [edges, setEdges] = useState<GraphEdge[]>([]);
+  const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
+
+  const onNodeClick = (node: GraphNode) => {
+
+    setSelectedId((prev) => (prev === node.id ? null : node.id));
+  
+  if (sourceNodeId === null) {
+    // First click → select source
+    setSourceNodeId(node.id);
+    return;
+  }
+
+  if (sourceNodeId === node.id) {
+    // Clicking the same node twice → reset
+    setSourceNodeId(null);
+    return;
+  }
+
+  const start = nodes.find(n => n.id === sourceNodeId);
+  const end = nodes.find(n => n.id === node.id);
+
+  if (!start || !end) return;
+
+  setEdges((prev) => [
+    ...prev,
+    {
+      id: prev.length,
+      startNode: start,
+      endNode: end,
+    },
+  ]);
+  setSourceNodeId(null);
+};
 
   return (
     <>
@@ -33,9 +68,19 @@ function App() {
           Delete
         </button>
       </div>
-      <svg width={800} height={300} style={{ border: "1px solid #ddd" }}>
-        <Edge edge={edge}/>
-        <Node />
+
+      <svg width={1300} height={500} style={{ border: "1px solid #ddd" }}>
+        {edges.map((e) => (
+          <Edge key={e.id} edge={e} />
+        ))}
+
+        {nodes.map((n) => (
+          <Node
+              key={n.id}
+              node={n}
+              selectedId={selectedId}
+              onClick={onNodeClick}
+            /> ))}
       </svg>
     </div>
     </>

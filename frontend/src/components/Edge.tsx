@@ -1,6 +1,7 @@
 import type { GraphNode } from "./Node";
 
 export type GraphEdge = {
+  id: number;
   startNode: GraphNode;
   endNode: GraphNode;
 };
