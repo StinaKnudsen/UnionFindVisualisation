@@ -3,7 +3,7 @@ import * as d3 from "d3";
 
 type Node = { id: number; x: number; y: number};
 
-export function UnionFindVis() {
+export function Node() {
   const width = 800;
   const height = 300;
 
@@ -27,33 +27,33 @@ export function UnionFindVis() {
     }
     setSelectedId(n.id);
   }
- //dav igen
+ 
   return (
-    <svg width={width} height={height} style={{ }}>
-    <g>
-  {nodes.map((node) => (
-    <g
-      key={node.id}
-      transform={`translate(${node.x}, ${node.y})`}
-      style={{ cursor: "pointer" }}
-      onClick={() => onNodeClick(node)}
-    >
-      <circle 
-        r={30}
-        fill={selectedId === node.id ? "hotpink" : "white"}
-        stroke="black"
-      />
-      <text
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fontSize={14}
-        style={{ userSelect: "none" }}
-      >
-        {node.id}
-      </text>
-    </g>
-  ))}
-</g>
+    <svg width={width} height={height} style={{}}>
+      <g>
+        {nodes.map((node) => (
+          <g
+            key={node.id}
+            transform={`translate(${node.x}, ${node.y})`}
+            style={{ cursor: "pointer" }}
+            onClick={() => onNodeClick(node)}
+          >
+            <circle 
+              r={30}
+              fill={selectedId === node.id ? "hotpink" : "white"}
+              stroke="black"
+            />
+            <text
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize={14}
+              style={{ userSelect: "none" }}
+            >
+              {node.id}
+            </text>
+          </g>
+        ))}
+      </g>
     </svg>
   );
 }
