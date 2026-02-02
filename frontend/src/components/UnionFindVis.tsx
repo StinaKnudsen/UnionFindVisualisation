@@ -29,7 +29,7 @@ export function UnionFindVis() {
     }
     setSelectedId(n.id);
   }
-
+ //dav igen
   return (
     <svg width={width} height={height} style={{ }}>
       {/* Nodes */}
