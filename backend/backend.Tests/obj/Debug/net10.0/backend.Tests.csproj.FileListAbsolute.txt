@@ -121,3 +121,13 @@
 /Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/obj/backend.Tests.csproj.nuget.dgspec.json
 /Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/obj/project.assets.json
 /Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/obj/Debug/net10.0/backend.Tests.sourcelink.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/appsettings.Development.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/appsettings.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.deps.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.runtimeconfig.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.staticwebassets.endpoints.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests.deps.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests.runtimeconfig.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/obj/backend.Tests.csproj.nuget.dgspec.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/obj/project.assets.json
+/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.Tests/bin/Debug/net10.0/backend.Tests/bin/Debug/net10.0/backend.Tests/obj/Debug/net10.0/backend.Tests.sourcelink.json
