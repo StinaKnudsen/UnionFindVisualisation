@@ -1,7 +1,9 @@
 import './App.css'
 import { useMemo, useState } from "react";
 import { Node } from "./components/Node";
+import type { GraphNode } from "./components/Node";
 import { Edge } from "./components/Edge";
+import type { GraphEdge } from "./components/Edge";
 import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
 
@@ -9,6 +11,14 @@ import type { Mode } from "./context/ModeContext";
 function App() {
   
   const [mode, setMode] = useState<Mode>("create");
+
+  const nodes: GraphNode[] = [
+  { id: 0, x: 80, y: 150 },
+  { id: 1, x: 180, y: 150 },
+];
+
+  const edge: GraphEdge = { startNode: nodes[0], endNode: nodes[1] };
+
 
   return (
     <>
@@ -24,8 +34,8 @@ function App() {
         </button>
       </div>
       <svg width={800} height={300} style={{ border: "1px solid #ddd" }}>
+        <Edge edge={edge}/>
         <Node />
-        <Edge />
       </svg>
     </div>
     </>
