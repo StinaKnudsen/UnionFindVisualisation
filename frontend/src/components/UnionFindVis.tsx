@@ -1,20 +1,18 @@
 import { useMemo, useState } from "react";
 import * as d3 from "d3";
 
-type Node = { id: number; x: number; y: number; parent: number };
+type Node = { id: number; x: number; y: number};
 
 export function UnionFindVis() {
   const width = 800;
   const height = 300;
 
   // Example data (replace with your real union-find state)
-  const node = ({
-        id: 1,
-        x: 60 + 1 * 70,
-        y: 160,
-        parent: 1,
-      }
-  );
+  const nodes: Node[] = Array.from({ length: 2 }, (_, i) => ({
+    id: i,
+    x: 80 + i * 100,
+    y: 150
+  }));
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -32,31 +30,30 @@ export function UnionFindVis() {
  //dav igen
   return (
     <svg width={width} height={height} style={{ }}>
-      {/* Nodes */}
-      <g>
-         <g
-         key={node.id}
-        transform={`translate(${node.x},${node.y})`}
-        style={{ cursor: "pointer" }}
-      ></g>
-        <g transform={`translate(${node.x},${node.y})`}>
-        <circle
-          r={30}
-          fill={selectedId === node.id ? "hotpink" : "white"}
-          stroke="black"
-          onClick={() => onNodeClick(node)}
-          style={{ cursor: "pointer" }}
-        />
-            <text
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fontSize="12"
-              style={{ userSelect: "none" }}
-            >
-              {node.id}
-            </text>
-          </g>
-      </g>
+    <g>
+  {nodes.map((node) => (
+    <g
+      key={node.id}
+      transform={`translate(${node.x}, ${node.y})`}
+      style={{ cursor: "pointer" }}
+      onClick={() => onNodeClick(node)}
+    >
+      <circle 
+        r={30}
+        fill={selectedId === node.id ? "hotpink" : "white"}
+        stroke="black"
+      />
+      <text
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize={14}
+        style={{ userSelect: "none" }}
+      >
+        {node.id}
+      </text>
+    </g>
+  ))}
+</g>
     </svg>
   );
 }
