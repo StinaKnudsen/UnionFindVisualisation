@@ -1,5 +1,5 @@
 import './App.css'
-import { UnionFindViz } from "./components/UnionFindVis";
+import { UnionFindVis } from "./components/UnionFindVis";
 
 function App() {
 
@@ -7,7 +7,7 @@ function App() {
     <>
       <div style={{ padding: 24 }}>
       <h1>Union-Find Visualisation</h1>
-      <UnionFindViz />
+      <UnionFindVis />
     </div>
     </>
   )
