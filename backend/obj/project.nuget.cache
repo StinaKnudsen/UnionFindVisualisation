@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "6eBaGOVMtwY=",
+  "success": true,
+  "projectFilePath": "/Users/Stina/Desktop/UnionFindVisualisation/backend/backend.csproj",
+  "expectedPackageFiles": [
+    "/Users/Stina/.nuget/packages/microsoft.aspnetcore.openapi/10.0.0/microsoft.aspnetcore.openapi.10.0.0.nupkg.sha512",
+    "/Users/Stina/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
