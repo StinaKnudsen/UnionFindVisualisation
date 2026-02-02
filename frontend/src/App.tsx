@@ -27,13 +27,13 @@ function App() {
 
     setSelectedId((prev) => (prev === node.id ? null : node.id));
   
-  if (sourceNodeId === null) {
+  if (sourceNodeId === null && mode == "create") {
     // First click → select source
     setSourceNodeId(node.id);
     return;
   }
 
-  if (sourceNodeId === node.id) {
+  if (sourceNodeId === node.id && mode == "create") {
     // Clicking the same node twice → reset
     setSourceNodeId(null);
     return;
