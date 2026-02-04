@@ -1,25 +1,21 @@
-import { useMemo, useState } from "react";
-import * as d3 from "d3";
-import { useMode } from "../context/ModeContext";
+import type { GraphNode } from "./Node";
 
-type Edge = { startNode: Node; endNode: Node};
+export type GraphEdge = {
+  id: number;
+  startNode: GraphNode;
+  endNode: GraphNode;
+};
 
-export function Edge() {
-    const mode = useMode();
-
-    const edge = {
-        startNode: null,
-        endNode: null
-    };
-
-    const [selectedStartNode, setSelectedStartNode] = useState<Node | null>(null);
-    const [selectedEndNode, setSelectedEndNode] = useState<Node | null>(null);
-
-    return (
-    <svg viewBox="0 0 100 100">
-        <g>
-             <line x1="0" y1="80" x2="100" y2="20" stroke="orange" />
-        </g>
-    </svg>
-    );
+export function Edge({ edge }: { edge: GraphEdge }) {
+    if (!edge) return null;
+  return (
+    <line
+      x1={edge.startNode.x}
+      y1={edge.startNode.y}
+      x2={edge.endNode.x}
+      y2={edge.endNode.y}
+      stroke="orange"
+      strokeWidth={2}
+    />
+  );
 }
