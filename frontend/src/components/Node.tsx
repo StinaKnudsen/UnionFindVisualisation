@@ -19,7 +19,7 @@ export function Node({ node, selectedId, onClick }: NodeProps) {
       style={{ cursor: "pointer" }}
       onClick={() => onClick(node)}
     >
-      <circle r={30} fill={isSelected ? "hotpink" : "white"} stroke="black" />
+      <circle r={20} fill={isSelected ? "hotpink" : "white"} stroke="black" />
       <text
         textAnchor="middle"
         dominantBaseline="middle"

@@ -10,13 +10,17 @@ import type { Mode } from "./context/ModeContext";
 
 function App() {
   
+  const size = 7;
   const [mode, setMode] = useState<Mode>("create");
 
-  const nodes: GraphNode[] = Array.from({ length: 10 }, (_, i) => ({
-    id: i,
-    x: 80 + i * 100,
-    y: 150
-  }));
+  const nodes: GraphNode[][] = Array.from({ length: size }, (_, i) =>
+  Array.from({ length: size }, (_, j) => ({
+    id: i + j * size,
+    x: 40 + i *70,
+    y: 70 + j *70
+  }))
+);
+
 
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
@@ -39,8 +43,10 @@ function App() {
     return;
   }
 
-  const start = nodes.find(n => n.id === sourceNodeId);
-  const end = nodes.find(n => n.id === node.id);
+  const flatNodes = nodes.flat();
+
+  const start = flatNodes.find(n => n.id === sourceNodeId);
+  const end = flatNodes.find(n => n.id === node.id);
 
   if (!start || !end) return;
 
@@ -69,12 +75,12 @@ function App() {
         </button>
       </div>
 
-      <svg width={1300} height={500} style={{ border: "1px solid #ddd" }}>
+      <svg width={1300} height={600} style={{ border: "1px solid #ddd" }}>
         {edges.map((e) => (
           <Edge key={e.id} edge={e} />
         ))}
 
-        {nodes.map((n) => (
+        {nodes.flat().map((n) => (
           <Node
               key={n.id}
               node={n}
