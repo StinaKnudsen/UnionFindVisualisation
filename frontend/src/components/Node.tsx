@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import * as d3 from "d3";
 import { useMode } from "../context/ModeContext";
 
-export type GraphNode = { id: number; x: number; y: number };
+export type GraphNode = { id: number; x: number; y: number, row: number, col: number };
 
 type NodeProps = {
   node: GraphNode;

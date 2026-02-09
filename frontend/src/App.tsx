@@ -7,6 +7,35 @@ import type { GraphEdge } from "./components/Edge";
 import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
 
+function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
+
+    const adjacent = [];
+    const rows = nodes.length;
+    const cols = nodes[0].length;
+    
+    // Above
+    if (row > 0) {
+        adjacent.push({ node: nodes[row - 1][col], position: [row - 1, col] });
+    }
+    
+    // Below
+    if (row < rows - 1) {
+        adjacent.push({ node: nodes[row + 1][col], position: [row + 1, col] });
+    }
+  
+    // Left
+    if (col > 0) {
+        adjacent.push({ node: nodes[row][col - 1], position: [row, col - 1] });
+    }
+    
+    // Right
+    if (col < cols - 1) {
+        adjacent.push({ node: nodes[row][col + 1], position: [row, col + 1] });
+    }
+    
+    console.log("adjacent nodes" + adjacent);    
+    return adjacent;
+}
 
 function App() {
   
@@ -14,13 +43,14 @@ function App() {
   const [mode, setMode] = useState<Mode>("create");
 
   const nodes: GraphNode[][] = Array.from({ length: size }, (_, i) =>
-  Array.from({ length: size }, (_, j) => ({
-    id: i + j * size,
-    x: 40 + i *70,
-    y: 70 + j *70
-  }))
-);
-
+    Array.from({ length: size }, (_, j) => ({
+      id: i + j * size,
+      x: 40 + i * 70,
+      y: 70 + j * 70,
+      row: j,
+      col: i
+    }))
+  );
 
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
@@ -28,7 +58,7 @@ function App() {
 
 
   const onNodeClick = (node: GraphNode) => {
-
+    
     setSelectedId((prev) => (prev === node.id ? null : node.id));
   
   if (sourceNodeId === null && mode == "create") {
@@ -43,10 +73,14 @@ function App() {
     return;
   }
 
+  
+
   const flatNodes = nodes.flat();
 
   const start = flatNodes.find(n => n.id === sourceNodeId);
   const end = flatNodes.find(n => n.id === node.id);
+
+  getAdjacentNodes(nodes, node.row, node.col);
 
   if (!start || !end) return;
 
