@@ -15,27 +15,26 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     
     // Above
     if (row > 0) {
-        adjacent.push({ node: nodes[row - 1][col], position: [row - 1, col] });
+        adjacent.push({ node: nodes[row - 1][col]});
     }
     
     // Below
     if (row < rows - 1) {
-        adjacent.push({ node: nodes[row + 1][col], position: [row + 1, col] });
+        adjacent.push({ node: nodes[row + 1][col]});
     }
   
     // Left
     if (col > 0) {
-        adjacent.push({ node: nodes[row][col - 1], position: [row, col - 1] });
+        adjacent.push({ node: nodes[row][col - 1]});
     }
     
     // Right
     if (col < cols - 1) {
-        adjacent.push({ node: nodes[row][col + 1], position: [row, col + 1] });
+        adjacent.push({ node: nodes[row][col + 1]});
     }
 
     for(var element of adjacent){
       console.log("neighbour ids: " + element.node.id);
-      console.log("node position: "+ element.position);
       console.log("node row: "+ element.node.row + " node col: " + element.node.col);
     }
     return adjacent;
@@ -59,9 +58,13 @@ function App() {
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  var highlightedNodes;
 
+  
 
   const onNodeClick = (node: GraphNode) => {
+
+    highlightedNodes = getAdjacentNodes(nodes, node.row, node.col);
     
     setSelectedId((prev) => (prev === node.id ? null : node.id));
   
@@ -77,14 +80,10 @@ function App() {
     return;
   }
 
-  
-
   const flatNodes = nodes.flat();
 
   const start = flatNodes.find(n => n.id === sourceNodeId);
   const end = flatNodes.find(n => n.id === node.id);
-
-  getAdjacentNodes(nodes, node.row, node.col);
 
   if (!start || !end) return;
 
