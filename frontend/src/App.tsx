@@ -32,8 +32,12 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     if (col < cols - 1) {
         adjacent.push({ node: nodes[row][col + 1], position: [row, col + 1] });
     }
-    
-    console.log("adjacent nodes" + adjacent);    
+
+    for(var element of adjacent){
+      console.log("neighbour ids: " + element.node.id);
+      console.log("node position: "+ element.position);
+      console.log("node row: "+ element.node.row + " node col: " + element.node.col);
+    }
     return adjacent;
 }
 
@@ -42,13 +46,13 @@ function App() {
   const size = 7;
   const [mode, setMode] = useState<Mode>("create");
 
-  const nodes: GraphNode[][] = Array.from({ length: size }, (_, i) =>
-    Array.from({ length: size }, (_, j) => ({
-      id: i + j * size,
-      x: 40 + i * 70,
-      y: 70 + j * 70,
-      row: j,
-      col: i
+  const nodes: GraphNode[][] = Array.from({ length: size }, (_, row) =>
+    Array.from({ length: size }, (_, col) => ({
+      id: col + row * size,
+      x: 40 + col * 70,
+      y: 70 + row * 70,
+      row,
+      col
     }))
   );
 
