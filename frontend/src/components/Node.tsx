@@ -21,7 +21,7 @@ export function Node({ node, selectedId, onClick, isAdjacent}: NodeProps) {
     : "gray";
   
   const strokeWidth =
-  isSelected ? "3"
+    isSelected ? "3"
     : isAdjacent ? "3"
     : "0.5";
 

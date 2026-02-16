@@ -68,11 +68,12 @@ function App() {
 
   const onNodeClick = (node: GraphNode) => {
     
-    setSelectedId((prev) => (prev === node.id ? null : node.id));
+    //setSelectedId((prev) => (prev === node.id ? null : node.id));
 
   if (sourceNodeId === null && mode == "create") {
     // First click → select source
     setSourceNodeId(node.id);
+    setSelectedId(node.id); //source node is ALWAYS highlighted with pink
 
     /*
     because the adjacent notes should be highlighted when rendering, it should be a constant.
@@ -80,12 +81,14 @@ function App() {
     converts each object into a node by looping through the returned array
     */
     setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
+    console.log("source node id is " +  node.id);
     return;
   }
 
   if (sourceNodeId === node.id && mode == "create") {
     // Clicking the same node twice → reset
     setSourceNodeId(null);
+    setAdjacentNodes([]);
     return;
   }
 
@@ -93,7 +96,7 @@ function App() {
 
   const start = flatNodes.find(n => n.id === sourceNodeId);
 
-  if (!start || !node) return;
+  if (!start) return;
 
   if (!adjacentIds.includes(node.id)) {
     setShowDismissible(true);
