@@ -6,6 +6,7 @@ import type { GraphNode } from "./components/Node";
 import type { GraphEdge } from "./components/Edge";
 import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
+import Alert from '@mui/material/Alert';
 
 function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
 
@@ -63,14 +64,11 @@ function App() {
       () => adjacentNodes.map(n => n.id),
       [adjacentNodes]
     );
+  const [showDismissible, setShowDismissible] = useState(false);
 
   const onNodeClick = (node: GraphNode) => {
     
     setSelectedId((prev) => (prev === node.id ? null : node.id));
-
-    
-    
-
 
   if (sourceNodeId === null && mode == "create") {
     // First click → select source
@@ -98,6 +96,7 @@ function App() {
   if (!start || !node) return;
 
   if (!adjacentIds.includes(node.id)) {
+    setShowDismissible(true);
     setSourceNodeId(null);
     setAdjacentNodes([]);
     return;
@@ -120,6 +119,7 @@ function App() {
      <ModeContext.Provider value={mode}>
         <div style={{ padding: 24 }}>
         <h1>Union-Find Visualisation</h1>
+        
         <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
           <button onClick={() => setMode("create")} disabled={mode === "create"}>
             Create
@@ -128,6 +128,12 @@ function App() {
             Delete
           </button>
         </div>
+
+        { showDismissible &&(
+          <Alert severity="error"  onClose={() => {setShowDismissible(false)}}>
+          You can only create an edge between two adjacent nodes 
+        </Alert>)}
+        
 
         <svg width={1300} height={600} style={{ border: "1px solid #ddd" }}>
           {edges.map((e) => (
