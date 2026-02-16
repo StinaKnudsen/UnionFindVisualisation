@@ -73,8 +73,8 @@ function App() {
 
   if (sourceNodeId === null && mode == "create") {
     // First click → select source
-    setSourceNodeId(node.id);
-    setSelectedId(node.id); //source node is ALWAYS highlighted with pink
+    setSourceNodeId(node.id); //for setting edges
+    setSelectedId(node.id); //source node is ALWAYS highlighted with pink, for visibility
 
     /*
     because the adjacent notes should be highlighted when rendering, it should be a constant.
@@ -88,7 +88,8 @@ function App() {
 
   if (sourceNodeId === node.id && mode == "create") {
     // Clicking the same node twice → reset
-    setSourceNodeId(null);
+    setSourceNodeId(null); //for setting edges
+    setSelectedId(null); //for visibility
     setAdjacentNodes([]);
     return;
   }
