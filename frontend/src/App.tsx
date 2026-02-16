@@ -58,16 +58,24 @@ function App() {
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  var highlightedNodes;
-
-  
+  const [adjacentNodes, setAdjacentNodes] = useState<GraphNode[]>([]);
+  const adjacentIds = useMemo(
+      () => new Set(adjacentNodes.map(n => n.id)),
+      [adjacentNodes]
+    );
 
   const onNodeClick = (node: GraphNode) => {
-
-    highlightedNodes = getAdjacentNodes(nodes, node.row, node.col);
     
     setSelectedId((prev) => (prev === node.id ? null : node.id));
-  
+
+    /*
+    because the adjacent notes should be highlighted when rendering, it should be a constant.
+    The function call getAdjacentNodes(nodes, node.row, node.col) returns an array of objects, and .map(x => x.node)
+    converts each object into a node by looping through the returned array
+    */
+    const adjacent = setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
+
+
   if (sourceNodeId === null && mode == "create") {
     // First click → select source
     setSourceNodeId(node.id);
@@ -100,34 +108,37 @@ function App() {
 
   return (
     <>
-     <ModeContext.Provider value={mode}></ModeContext.Provider>
-      <div style={{ padding: 24 }}>
-      <h1>Union-Find Visualisation</h1>
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        <button onClick={() => setMode("create")} disabled={mode === "create"}>
-          Create
-        </button>
-        <button onClick={() => setMode("delete")} disabled={mode === "delete"}>
-          Delete
-        </button>
+     <ModeContext.Provider value={mode}>
+        <div style={{ padding: 24 }}>
+        <h1>Union-Find Visualisation</h1>
+        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+          <button onClick={() => setMode("create")} disabled={mode === "create"}>
+            Create
+          </button>
+          <button onClick={() => setMode("delete")} disabled={mode === "delete"}>
+            Delete
+          </button>
+        </div>
+
+        <svg width={1300} height={600} style={{ border: "1px solid #ddd" }}>
+          {edges.map((e) => (
+            <Edge key={e.id} edge={e} />
+          ))}
+
+          {nodes.flat().map((n) => (
+            <Node
+                key={n.id}
+                node={n}
+                selectedId={selectedId}
+                onClick={onNodeClick}
+                isAdjacent={adjacentIds.has(n.id)}
+              /> ))}
+        </svg>
       </div>
-
-      <svg width={1300} height={600} style={{ border: "1px solid #ddd" }}>
-        {edges.map((e) => (
-          <Edge key={e.id} edge={e} />
-        ))}
-
-        {nodes.flat().map((n) => (
-          <Node
-              key={n.id}
-              node={n}
-              selectedId={selectedId}
-              onClick={onNodeClick}
-            /> ))}
-      </svg>
-    </div>
+    </ModeContext.Provider>
     </>
   )
 }
 
 export default App
+
