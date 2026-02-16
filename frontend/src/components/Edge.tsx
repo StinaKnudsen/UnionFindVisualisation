@@ -6,9 +6,18 @@ export type GraphEdge = {
   endNode: GraphNode;
 };
 
-export function Edge({ edge }: { edge: GraphEdge }) {
+type GraphProps = {
+  edge: GraphEdge;
+  onClick:(edge: GraphEdge) => void;
+}
+export function Edge({ edge, onClick }: GraphProps) {
     if (!edge) return null;
+
   return (
+     <g
+      style={{ cursor: "pointer" }}
+      onClick={() => onClick(edge)}
+    >
     <line
       x1={edge.startNode.x}
       y1={edge.startNode.y}
@@ -17,5 +26,6 @@ export function Edge({ edge }: { edge: GraphEdge }) {
       stroke="orange"
       strokeWidth={2}
     />
+    </g>
   );
 }

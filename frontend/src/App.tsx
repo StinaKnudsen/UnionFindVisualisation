@@ -65,6 +65,7 @@ function App() {
       [adjacentNodes]
     );
   const [showDismissible, setShowDismissible] = useState(false);
+  const [edgeId, setEdgeId] = useState<number | null>(null);
 
   const onNodeClick = (node: GraphNode) => {
     
@@ -117,6 +118,13 @@ function App() {
   setAdjacentNodes([]);
 };
 
+  const onEdgeClick = (edge: GraphEdge) => {
+    if (mode == "delete") {
+      setEdges(prev => prev.filter(e => e.id !== edge.id));
+      setEdgeId(null);
+    }
+  };
+
   return (
     <>
      <ModeContext.Provider value={mode}>
@@ -139,9 +147,13 @@ function App() {
         
 
         <svg width={1300} height={600} style={{ border: "1px solid #ddd" }}>
-          {edges.map((e) => (
-            <Edge key={e.id} edge={e} />
-          ))}
+          {(edges.map((e) => (
+          <Edge 
+            key={e.id} 
+            edge={e}
+            onClick={onEdgeClick}
+            />
+          )))}
 
           {nodes.flat().map((n) => (
             <Node
