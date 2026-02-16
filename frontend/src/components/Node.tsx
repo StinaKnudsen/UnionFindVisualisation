@@ -10,7 +10,7 @@ type NodeProps = {
   selectedId: number | null;
   onClick: (node: GraphNode) => void;
   isAdjacent: boolean;
-};
+}; 
 
 export function Node({ node, selectedId, onClick, isAdjacent}: NodeProps) {
   const isSelected = selectedId === node.id;
