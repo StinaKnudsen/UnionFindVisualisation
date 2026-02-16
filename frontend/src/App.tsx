@@ -95,9 +95,13 @@ function App() {
 
   const start = flatNodes.find(n => n.id === sourceNodeId);
 
-  if (!start) return;
+  if (!start || !node) return;
 
-  if (!adjacentIds.includes(node.id)) return;
+  if (!adjacentIds.includes(node.id)) {
+    setSourceNodeId(null);
+    setAdjacentNodes([]);
+    return;
+  }
 
   setEdges((prev) => [
     ...prev,
