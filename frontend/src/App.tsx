@@ -68,17 +68,20 @@ function App() {
     
     setSelectedId((prev) => (prev === node.id ? null : node.id));
 
+    
+    
+
+
+  if (sourceNodeId === null && mode == "create") {
+    // First click → select source
+    setSourceNodeId(node.id);
+
     /*
     because the adjacent notes should be highlighted when rendering, it should be a constant.
     The function call getAdjacentNodes(nodes, node.row, node.col) returns an array of objects, and .map(x => x.node)
     converts each object into a node by looping through the returned array
     */
     const adjacent = setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
-
-
-  if (sourceNodeId === null && mode == "create") {
-    // First click → select source
-    setSourceNodeId(node.id);
     return;
   }
 
