@@ -60,7 +60,7 @@ function App() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [adjacentNodes, setAdjacentNodes] = useState<GraphNode[]>([]);
   const adjacentIds = useMemo(
-      () => new Set(adjacentNodes.map(n => n.id)),
+      () => adjacentNodes.map(n => n.id),
       [adjacentNodes]
     );
 
@@ -81,7 +81,7 @@ function App() {
     The function call getAdjacentNodes(nodes, node.row, node.col) returns an array of objects, and .map(x => x.node)
     converts each object into a node by looping through the returned array
     */
-    const adjacent = setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
+    setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
     return;
   }
 
@@ -94,19 +94,21 @@ function App() {
   const flatNodes = nodes.flat();
 
   const start = flatNodes.find(n => n.id === sourceNodeId);
-  const end = flatNodes.find(n => n.id === node.id);
 
-  if (!start || !end) return;
+  if (!start) return;
+
+  if (!adjacentIds.includes(node.id)) return;
 
   setEdges((prev) => [
     ...prev,
     {
       id: prev.length,
       startNode: start,
-      endNode: end,
+      endNode: node,
     },
   ]);
   setSourceNodeId(null);
+  setAdjacentNodes([]);
 };
 
   return (
@@ -134,7 +136,7 @@ function App() {
                 node={n}
                 selectedId={selectedId}
                 onClick={onNodeClick}
-                isAdjacent={adjacentIds.has(n.id)}
+                isAdjacent={adjacentIds.includes(n.id)}
               /> ))}
         </svg>
       </div>
