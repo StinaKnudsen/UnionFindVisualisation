@@ -2,7 +2,7 @@
 
 ## Context and Problem Statement
 
-The app should be run on multiple devices at once, how do we ensure concurrent read and writes?
+Which database type would be best for the project, when our requirement is that the application only needs to run on a local device?
 
 ## Considered Options
 
@@ -11,4 +11,4 @@ The app should be run on multiple devices at once, how do we ensure concurrent r
 
 ## Decision Outcome
 
-Chosen option: "PostgreSQL", because it ensures concurrent writes to the database and does not lock the write.
+Chosen option: "SQLite", because we do not require a server and multiple users concurrently which PostgreSQL would offer. Therefore, we have chosen SQLite, because it lets the application run on localhost.
