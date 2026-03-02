@@ -4,7 +4,7 @@ namespace Core.Interfaces;
 public interface INodeEdgeRepository
 {
     Task<Edge> CreateEdge(int startNodeId, int endNodeId, int id);
-    Task<Edge> GetEdgeFromId(string EdgeIdQuery);
+    Task<Edge> GetEdgeFromId(int EdgeId);
     Task<Edge> DeleteEdgeOnClick(int EdgeId);
     Task<Edge> DeleteLastCreatedEdge(int EdgeId);
 }

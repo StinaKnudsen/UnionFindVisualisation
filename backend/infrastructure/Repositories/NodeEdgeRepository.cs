@@ -22,9 +22,9 @@ public class NodeEdgeRepository : INodeEdgeRepository
         return edge;
 
     }
-    public async Task<Edge> GetEdgeFromId(string EdgeIdQuery)
+    public async Task<Edge> GetEdgeFromId(int EdgeId)
     {
-        return null;
+        return await _dbContext.Edges.GetEdgeAsync(EdgeId);
     }
     public async Task<Edge> DeleteEdgeOnClick(int EdgeId)
     {
