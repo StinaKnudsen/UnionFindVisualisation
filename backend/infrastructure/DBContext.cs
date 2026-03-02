@@ -1,8 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore;
+using backend.infrastructure.Entities;
 
-namespace Infrastructure;
+namespace backend.infrastructure;
 public class DBContext : DbContext
 {
     public DBContext(DbContextOptions<DBContext> options) : base(options)
