@@ -1,4 +1,4 @@
-namespace Infrastructure;
+namespace backend.infrastructure.Entities;
 
 public class Tree
 {
