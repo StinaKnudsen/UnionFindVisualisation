@@ -23,7 +23,7 @@ public class NodeEdgeRepository : INodeEdgeRepository
         return edge;
 
     }
-    public async Task<Edge> GetEdge(int EdgeId)
+    public async Task<Edge?> GetEdge(int EdgeId)
     {
         return await _dbContext.Edges.FindAsync(EdgeId);
     }

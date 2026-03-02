@@ -8,18 +8,18 @@ namespace backend.infrastructure.Services;
 
 public interface INodeEdgeService
 {
-    Task<Edge> GetEdgeAsync(int EdgeId);
+    Task<Edge?> GetEdgeAsync(int EdgeId);
 }
 
 public class NodeEdgeService : INodeEdgeService
 {
     private readonly INodeEdgeRepository _nodeEdgeRepo;
-    public NodeEdgeService(NodeEdgeRepository NodeEdgeRepo)
+    public NodeEdgeService(INodeEdgeRepository NodeEdgeRepo)
     {
         _nodeEdgeRepo = NodeEdgeRepo; 
     }
 
-    public async Task<Edge> GetEdgeAsync(int EdgeId)
+    public async Task<Edge?> GetEdgeAsync(int EdgeId)
     {
         return await _nodeEdgeRepo.GetEdge(EdgeId);
     } 
