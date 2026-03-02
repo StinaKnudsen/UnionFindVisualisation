@@ -1,6 +1,10 @@
 using backend.infrastructure.Entities;
+using backend.infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Core.Interfaces;
 
-namespace infrastructure.Services;
+namespace backend.infrastructure.Services;
+
 
 public interface INodeEdgeService
 {
@@ -9,17 +13,16 @@ public interface INodeEdgeService
 
 public class NodeEdgeService : INodeEdgeService
 {
-    private readonly NodeEdgeRepository _nodeEdgeRepo;
+    private readonly INodeEdgeRepository _nodeEdgeRepo;
     public NodeEdgeService(NodeEdgeRepository NodeEdgeRepo)
     {
-        _nodeEdgeRepo = NodeEdgeRepo;
+        _nodeEdgeRepo = NodeEdgeRepo; 
     }
 
     public async Task<Edge> GetEdgeAsync(int EdgeId)
     {
-        
-    }
-
+        return await _nodeEdgeRepo.GetEdge(EdgeId);
+    } 
 
 
 }

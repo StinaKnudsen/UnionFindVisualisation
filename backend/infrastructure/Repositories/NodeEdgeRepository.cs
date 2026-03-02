@@ -1,6 +1,7 @@
 using Core.Interfaces;
 using backend.infrastructure.Entities;
-
+using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 
 namespace backend.infrastructure.Repositories;
@@ -22,9 +23,9 @@ public class NodeEdgeRepository : INodeEdgeRepository
         return edge;
 
     }
-    public async Task<Edge> GetEdgeFromId(int EdgeId)
+    public async Task<Edge> GetEdge(int EdgeId)
     {
-        return await _dbContext.Edges.GetEdgeAsync(EdgeId);
+        return await _dbContext.Edges.FindAsync(EdgeId);
     }
     public async Task<Edge> DeleteEdgeOnClick(int EdgeId)
     {

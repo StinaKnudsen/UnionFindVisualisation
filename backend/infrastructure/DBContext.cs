@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore;
 using backend.infrastructure.Entities;
+using SQLitePCL;
 
 namespace backend.infrastructure;
 public class DBContext : DbContext
