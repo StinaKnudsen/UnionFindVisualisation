@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore;
-using Infrastructure;
+using backend.infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
