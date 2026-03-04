@@ -11,6 +11,16 @@ using backend.infrastructure.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<DBContext>(options =>
@@ -21,6 +31,7 @@ builder.Services.AddScoped<NodeEdgeService>();
 
 var app = builder.Build();
 
+app.UseCors("AllowFrontend");
 
 app.MapGet("/api/edges/{id:int}", async (int id, NodeEdgeService NEService) =>
 {
@@ -33,14 +44,14 @@ app.MapPost("/api/edges", async (EdgeDTO edge, DBContext dbContext) =>
     var startNode = await dbContext.Nodes.FindAsync(edge.StartNodeId);
     if (startNode == null)
     {
-        startNode = new Node { Id = startNode.Id};
+        startNode = new Node { Id = edge.StartNodeId};
         dbContext.Nodes.Add(startNode);
     }
 
     var endNode = await dbContext.Nodes.FindAsync(edge.EndNodeId);
     if (endNode == null)
     {
-        endNode = new Node { Id = endNode.Id};
+        endNode = new Node { Id = edge.EndNodeId};
         dbContext.Nodes.Add(endNode);
     }
 

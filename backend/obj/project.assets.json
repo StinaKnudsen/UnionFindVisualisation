@@ -7275,19 +7275,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/Stina/.nuget/packages/": {}
+    "/Users/albertebuelow/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/Stina/Desktop/Bachelor/UnionFindVisualisation/backend/backend.csproj",
+      "projectUniqueName": "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/backend.csproj",
       "projectName": "backend",
-      "projectPath": "/Users/Stina/Desktop/Bachelor/UnionFindVisualisation/backend/backend.csproj",
-      "packagesPath": "/Users/Stina/.nuget/packages/",
-      "outputPath": "/Users/Stina/Desktop/Bachelor/UnionFindVisualisation/backend/obj/",
+      "projectPath": "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/backend.csproj",
+      "packagesPath": "/Users/albertebuelow/.nuget/packages/",
+      "outputPath": "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/Stina/.nuget/NuGet/NuGet.Config"
+        "/Users/albertebuelow/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -7311,7 +7311,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -7359,6 +7359,20 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[9.0.13, 9.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[9.0.13, 9.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[9.0.13, 9.0.13]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -7367,7 +7381,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.310/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

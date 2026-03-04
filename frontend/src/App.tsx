@@ -43,7 +43,7 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
 }
 
   const createEdgeInDb = async (id: number, startNodeId: number, endNodeId: number) => {
-  const res = await fetch("http://localhost:5000/api/edges", {
+  const res = await fetch("http://localhost:5281/api/edges", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, startNodeId, endNodeId }),
