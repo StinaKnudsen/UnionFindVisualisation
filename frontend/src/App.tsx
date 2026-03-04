@@ -54,7 +54,8 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     throw new Error(msg);
   }
 
-  return await res.json();
+  const respo = await res.text();
+  return respo ? JSON.parse(respo) : null;
 };
 
 function App() {
