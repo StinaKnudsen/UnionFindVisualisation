@@ -8,6 +8,7 @@ import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
 import Alert from '@mui/material/Alert';
 
+
 function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
 
     const adjacent = [];
@@ -40,6 +41,22 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     }
     return adjacent;
 }
+
+  const createEdgeInDb = async (id: number, startNodeId: number, endNodeId: number) => {
+  const res = await fetch("http://localhost:5281/api/edges", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, startNodeId, endNodeId }),
+  });
+
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new Error(msg);
+  }
+
+  const respo = await res.text();
+  return respo ? JSON.parse(respo) : null;
+};
 
 function App() {
   
@@ -107,6 +124,7 @@ function App() {
     return;
   }
 
+  const newEdgeId = edges.length; 
   setEdges((prev) => [
     ...prev,
     {
@@ -115,6 +133,9 @@ function App() {
       endNode: node,
     },
   ]);
+      createEdgeInDb(newEdgeId, start.id, node.id).catch((err) =>
+      console.error("Failed to create edge in DB:", err)
+    );
   setSourceNodeId(null);
   setAdjacentNodes([]);
 };
