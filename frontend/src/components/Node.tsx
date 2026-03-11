@@ -1,7 +1,3 @@
-import { useMemo, useState } from "react";
-import * as d3 from "d3";
-import { useMode } from "../context/ModeContext";
-
 
 export type GraphNode = { id: number; x: number; y: number, row: number, col: number };
 
@@ -32,7 +28,7 @@ export function Node({ node, selectedId, onClick, isAdjacent}: NodeProps) {
       style={{ cursor: "pointer" }}
       onClick={() => onClick(node)}
     >
-      <circle r={20}fill={isSelected ? "hotpink" : "white"} stroke={border} stroke-width={strokeWidth} />
+      <circle r={20}fill={isSelected ? "hotpink" : "white"} stroke={border} strokeWidth={strokeWidth} />
       <text
         textAnchor="middle"
         dominantBaseline="middle"
