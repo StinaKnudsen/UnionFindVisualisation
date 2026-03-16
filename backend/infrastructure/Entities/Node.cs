@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace backend.infrastructure.Entities;
 
 public class Node
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required int Id {get; set;}
     public List<Edge>? Edges {get; set;}
     
