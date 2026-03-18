@@ -71,7 +71,7 @@ function App() {
       .catch(err => console.error("Failed to fetch nodes:", err));
   }, []);
 
-  const createEdgeInDb = async (startNodeId: number, endNodeId: number) => {
+  const createEdgeInDb = async (startNodeId: number, endNodeId: number): Promise<number> => {
     const res = await fetch("http://localhost:5281/api/edges", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -84,11 +84,26 @@ function App() {
     }
 
     // returns flat node list and feeds it into ufNodes
-    const updatedNodes: NodeDTO[] = await res.json();
+    const { edgeId, nodes: updatedNodes } = await res.json();
+    setUfNodes(updatedNodes);
+    return edgeId;
+  };
+
+  const deleteEdgeInDb = async (edgeId: number) => {
+    const res = await fetch(`http://localhost:5281/api/edges/${edgeId}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error(msg);
+    }
+
+    const updatedNodes = await res.json();
     setUfNodes(updatedNodes);
   };
 
-  const onNodeClick = (node: GraphNode) => {
+  const onNodeClick = async (node: GraphNode) => {
 
   if (sourceNodeId === null && mode == "create") {
     // First click -> select source
@@ -126,25 +141,28 @@ function App() {
     return;
   }
 
-  const newEdgeId = edgeCounter.current++;
-  setEdges((prev) => [
-    ...prev,
-    {
-      id: newEdgeId,
-      startNode: start,
-      endNode: node,
-    },
-  ]);
-      createEdgeInDb(start.id, node.id).catch((err) =>
-      console.error("Failed to create edge in DB:", err)
-    );
   setSourceNodeId(null);
+  setSelectedId(null);
   setAdjacentNodes([]);
+
+  try {
+    const dbEdgeId = await createEdgeInDb(start.id, node.id);
+    setEdges((prev) => [
+      ...prev,
+      { 
+        id: dbEdgeId, 
+        startNode: start, 
+        endNode: node }
+    ]);
+  } catch (err) {
+    console.error("Failed to create edge in DB:", err);
+  }
 };
 
   const onEdgeClick = (edge: GraphEdge) => {
     if (mode == "delete") {
       setEdges(prev => prev.filter(e => e.id !== edge.id));
+      deleteEdgeInDb(edge.id).catch(err => console.error("Failed to delete edge:", err));
     }
   };
 

@@ -35,4 +35,22 @@ public class UnionFindService
         return true;
     }
 
+    public async Task RebuildAsync()
+    {
+        // Reset all nodes to be their own root
+        var allNodes = _db.Nodes.ToList();
+        foreach (var node in allNodes)
+        {
+            node.Parent = -1;
+        }
+        await _db.SaveChangesAsync();
+
+        // Re-union all remaining edges
+        var allEdges = _db.Edges.ToList();
+        foreach (var edge in allEdges)
+        {
+            await UnionAsync(edge.StartNodeId, edge.EndNodeId);
+        }
+    }
+
 }

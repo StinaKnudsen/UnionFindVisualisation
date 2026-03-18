@@ -24,5 +24,8 @@ public class NodeEdgeService : INodeEdgeService
         return await _nodeEdgeRepo.GetEdge(EdgeId);
     } 
 
-
+    public async Task DeleteEdgeOnClick(int EdgeId)
+    {
+        await _nodeEdgeRepo.DeleteEdgeOnClick(EdgeId);
+    }
 }
