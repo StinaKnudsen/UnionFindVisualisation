@@ -63,7 +63,6 @@ function App() {
       [adjacentNodes]
     );
   const [showDismissible, setShowDismissible] = useState(false);
-  const [edgeId, setEdgeId] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:5281/api/nodes")
@@ -72,11 +71,11 @@ function App() {
       .catch(err => console.error("Failed to fetch nodes:", err));
   }, []);
 
-  const createEdgeInDb = async (id: number, startNodeId: number, endNodeId: number) => {
+  const createEdgeInDb = async (startNodeId: number, endNodeId: number) => {
     const res = await fetch("http://localhost:5281/api/edges", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, startNodeId, endNodeId }),
+      body: JSON.stringify({ startNodeId, endNodeId }),
     });
 
     if (!res.ok) {
@@ -90,11 +89,9 @@ function App() {
   };
 
   const onNodeClick = (node: GraphNode) => {
-    
-    //setSelectedId((prev) => (prev === node.id ? null : node.id));
 
   if (sourceNodeId === null && mode == "create") {
-    // First click → select source
+    // First click -> select source
     setSourceNodeId(node.id); //for setting edges
     setSelectedId(node.id); //source node is ALWAYS highlighted with pink, for visibility
 
@@ -129,7 +126,7 @@ function App() {
     return;
   }
 
-  const newEdgeId = edgeCounter.current++; 
+  const newEdgeId = edgeCounter.current++;
   setEdges((prev) => [
     ...prev,
     {
@@ -138,7 +135,7 @@ function App() {
       endNode: node,
     },
   ]);
-      createEdgeInDb(newEdgeId, start.id, node.id).catch((err) =>
+      createEdgeInDb(start.id, node.id).catch((err) =>
       console.error("Failed to create edge in DB:", err)
     );
   setSourceNodeId(null);
@@ -148,7 +145,6 @@ function App() {
   const onEdgeClick = (edge: GraphEdge) => {
     if (mode == "delete") {
       setEdges(prev => prev.filter(e => e.id !== edge.id));
-      setEdgeId(null);
     }
   };
 

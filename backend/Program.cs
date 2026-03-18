@@ -67,7 +67,7 @@ app.MapPost("/api/edges", async (EdgeDTO edge, DBContext dbContext, UnionFindSer
 
     await uf.UnionAsync(edge.StartNodeId, edge.EndNodeId);
 
-    var newEdge = new Edge { Id = edge.Id, StartNodeId = edge.StartNodeId, EndNodeId = edge.EndNodeId };
+    var newEdge = new Edge { StartNodeId = edge.StartNodeId, EndNodeId = edge.EndNodeId };
     dbContext.Edges.Add(newEdge);
     await dbContext.SaveChangesAsync();
 
