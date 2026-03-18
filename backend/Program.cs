@@ -71,11 +71,23 @@ app.MapPost("/api/edges", async (EdgeDTO edge, DBContext dbContext, UnionFindSer
     dbContext.Edges.Add(newEdge);
     await dbContext.SaveChangesAsync();
 
-    // Return all nodes so frontend can reconstruct trees
+    // Return all nodes and edgeId so frontend can reconstruct trees
     var nodes = await dbContext.Nodes.ToListAsync();
-    return Results.Ok(nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent }));
+    return Results.Ok(new {
+        edgeId = newEdge.Id,
+        nodes = nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent })
+    });
 } 
 );
+
+app.MapDelete("/api/edges/{id:int}", async (int id, NodeEdgeService NEService, UnionFindService uf, DBContext dbContext) =>
+{
+    await NEService.DeleteEdgeOnClick(id);
+    await uf.RebuildAsync();
+
+    var nodes = await dbContext.Nodes.ToListAsync();
+    return Results.Ok(nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent }));
+});
 
 app.MapGet("/api/nodes", async (DBContext dbContext) =>
 {

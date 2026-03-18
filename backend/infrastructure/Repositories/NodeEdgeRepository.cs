@@ -21,15 +21,18 @@ public class NodeEdgeRepository : INodeEdgeRepository
         await _dbContext.SaveChangesAsync();
 
         return edge;
-
     }
     public async Task<Edge?> GetEdge(int EdgeId)
     {
         return await _dbContext.Edges.FindAsync(EdgeId);
     }
-    public async Task<Edge> DeleteEdgeOnClick(int EdgeId)
+    public async Task DeleteEdgeOnClick(int EdgeId)
     {
-        return null;
+        var findEdge = await _dbContext.Edges.FindAsync(EdgeId);
+        if (findEdge == null) { return; }
+        
+        _dbContext.Remove<Edge>(findEdge);
+        await _dbContext.SaveChangesAsync();
     }
     public async Task<Edge> DeleteLastCreatedEdge(int EdgeId)
     {
