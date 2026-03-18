@@ -1,11 +1,14 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace backend.infrastructure.Entities;
 
 public class Node
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required int Id {get; set;}
     public List<Edge>? Edges {get; set;}
     
-    // Id of parent node
-    public int Parent {get; set;}
+    // -1 = root
+    public int Parent {get; set;} = -1; 
     
 }

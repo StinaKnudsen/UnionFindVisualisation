@@ -1,5 +1,5 @@
 import './App.css'
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Node } from "./components/Node";
 import { Edge } from "./components/Edge";
 import type { GraphNode } from "./components/Node";
@@ -7,7 +7,10 @@ import type { GraphEdge } from "./components/Edge";
 import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
 import Alert from '@mui/material/Alert';
+import { Tree } from './components/Tree';
 
+// to get data from backend
+type NodeDTO = { id: number; parent: number };
 
 function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
 
@@ -16,24 +19,16 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     const cols = nodes[0].length;
     
     // Above
-    if (row > 0) {
-        adjacent.push({ node: nodes[row - 1][col]});
-    }
+    if (row > 0) { adjacent.push({ node: nodes[row - 1][col]}); }
     
     // Below
-    if (row < rows - 1) {
-        adjacent.push({ node: nodes[row + 1][col]});
-    }
+    if (row < rows - 1) { adjacent.push({ node: nodes[row + 1][col]}); }
   
     // Left
-    if (col > 0) {
-        adjacent.push({ node: nodes[row][col - 1]});
-    }
+    if (col > 0) { adjacent.push({ node: nodes[row][col - 1]}); }
     
     // Right
-    if (col < cols - 1) {
-        adjacent.push({ node: nodes[row][col + 1]});
-    }
+    if (col < cols - 1) { adjacent.push({ node: nodes[row][col + 1]}); }
 
     for(var element of adjacent){
       console.log("neighbour ids: " + element.node.id);
@@ -42,26 +37,11 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     return adjacent;
 }
 
-  const createEdgeInDb = async (id: number, startNodeId: number, endNodeId: number) => {
-  const res = await fetch("http://localhost:5281/api/edges", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, startNodeId, endNodeId }),
-  });
-
-  if (!res.ok) {
-    const msg = await res.text();
-    throw new Error(msg);
-  }
-
-  const respo = await res.text();
-  return respo ? JSON.parse(respo) : null;
-};
-
 function App() {
   
   const size = 7;
   const [mode, setMode] = useState<Mode>("create");
+  const edgeCounter = useRef(0);
 
   const nodes: GraphNode[][] = Array.from({ length: size }, (_, row) =>
     Array.from({ length: size }, (_, col) => ({
@@ -73,6 +53,7 @@ function App() {
     }))
   );
 
+  const [ufNodes, setUfNodes] = useState<NodeDTO[]>([]);
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -82,14 +63,35 @@ function App() {
       [adjacentNodes]
     );
   const [showDismissible, setShowDismissible] = useState(false);
-  const [edgeId, setEdgeId] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5281/api/nodes")
+      .then(r => r.json())
+      .then(setUfNodes)
+      .catch(err => console.error("Failed to fetch nodes:", err));
+  }, []);
+
+  const createEdgeInDb = async (startNodeId: number, endNodeId: number) => {
+    const res = await fetch("http://localhost:5281/api/edges", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ startNodeId, endNodeId }),
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error(msg);
+    }
+
+    // returns flat node list and feeds it into ufNodes
+    const updatedNodes: NodeDTO[] = await res.json();
+    setUfNodes(updatedNodes);
+  };
 
   const onNodeClick = (node: GraphNode) => {
-    
-    //setSelectedId((prev) => (prev === node.id ? null : node.id));
 
   if (sourceNodeId === null && mode == "create") {
-    // First click → select source
+    // First click -> select source
     setSourceNodeId(node.id); //for setting edges
     setSelectedId(node.id); //source node is ALWAYS highlighted with pink, for visibility
 
@@ -104,7 +106,7 @@ function App() {
   }
 
   if (sourceNodeId === node.id && mode == "create") {
-    // Clicking the same node twice → reset
+    // Clicking the same node twice -> reset
     setSourceNodeId(null); //for setting edges
     setSelectedId(null); //for visibility
     setAdjacentNodes([]);
@@ -124,16 +126,16 @@ function App() {
     return;
   }
 
-  const newEdgeId = edges.length; 
+  const newEdgeId = edgeCounter.current++;
   setEdges((prev) => [
     ...prev,
     {
-      id: prev.length,
+      id: newEdgeId,
       startNode: start,
       endNode: node,
     },
   ]);
-      createEdgeInDb(newEdgeId, start.id, node.id).catch((err) =>
+      createEdgeInDb(start.id, node.id).catch((err) =>
       console.error("Failed to create edge in DB:", err)
     );
   setSourceNodeId(null);
@@ -143,7 +145,6 @@ function App() {
   const onEdgeClick = (edge: GraphEdge) => {
     if (mode == "delete") {
       setEdges(prev => prev.filter(e => e.id !== edge.id));
-      setEdgeId(null);
     }
   };
 
@@ -168,24 +169,26 @@ function App() {
         </Alert>)}
         
 
-        <svg width={1300} height={600} style={{ border: "1px solid #ddd" }}>
-          {(edges.map((e) => (
-          <Edge 
-            key={e.id} 
-            edge={e}
-            onClick={onEdgeClick}
-            />
-          )))}
-
-          {nodes.flat().map((n) => (
-            <Node
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+          <svg width={520} height={560} style={{ border: "1px solid #ddd" }}>
+            {/* Grid - left side */}
+            {edges.map((e) => (
+              <Edge key={e.id} edge={e} onClick={onEdgeClick} />
+            ))}
+            {nodes.flat().map((n) => (
+              <Node
                 key={n.id}
                 node={n}
                 selectedId={selectedId}
                 onClick={onNodeClick}
                 isAdjacent={adjacentIds.includes(n.id)}
-              /> ))}
-        </svg>
+              />
+            ))}
+          </svg>
+
+          {/* Tree - right side */}
+          <Tree nodes={ufNodes} />
+        </div>
       </div>
     </ModeContext.Provider>
     </>
