@@ -89,12 +89,14 @@ app.MapDelete("/api/edges/{id:int}", async (int id, NodeEdgeService NEService, U
     return Results.Ok(nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent }));
 });
 
+// get all nodes
 app.MapGet("/api/nodes", async (DBContext dbContext) =>
 {
     var nodes = await dbContext.Nodes.ToListAsync();
     return Results.Ok(nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent }));
 });
 
+// clear database
 app.MapDelete("/api/database/clear", async (DBContext dbContext) => 
 {
     await dbContext.Edges.ExecuteDeleteAsync();

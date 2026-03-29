@@ -1,6 +1,8 @@
 using backend.infrastructure.Entities;
 using backend.infrastructure;
 using Microsoft.EntityFrameworkCore;
+
+// Implemented based on Algorithms 4th Edition by Sedgewick and Wayne p. 228
 public class WeightedUFService
 {
     private readonly DBContext _db;
@@ -76,7 +78,6 @@ public class WeightedUFService
     {
         return await _db.Nodes.CountAsync(n => n.Parent == -1);
     }
-
 
     public async Task RebuildAsync()
     {
