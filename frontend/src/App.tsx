@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Node } from "./components/Node";
 import { Edge } from "./components/Edge";
 import type { GraphNode } from "./components/Node";
@@ -44,7 +44,6 @@ function App() {
   
   const size = 7;
   const [mode, setMode] = useState<Mode>("create");
-  const edgeCounter = useRef(0);
 
   const nodes: GraphNode[][] = Array.from({ length: size }, (_, row) =>
     Array.from({ length: size }, (_, col) => ({
@@ -239,4 +238,3 @@ function App() {
 }
 
 export default App
-

@@ -1,6 +1,6 @@
 using backend.infrastructure;
 
-public class UnionFindService
+public class UnionFindService : IUnionFindService
 {
     private readonly DBContext _db;
 

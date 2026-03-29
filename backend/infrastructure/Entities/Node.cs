@@ -11,4 +11,6 @@ public class Node
     // -1 = root
     public int Parent {get; set;} = -1; 
     
+    // used by root nodes to track size of tree
+    public int Size { get; set; } = 1;
 }
