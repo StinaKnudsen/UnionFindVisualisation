@@ -13,6 +13,6 @@ public class DBContext : DbContext
     
     public DbSet<Node> Nodes { get; set; }
     public DbSet<Edge> Edges { get; set; }
-    public DbSet<Tree> Trees { get; set; }
+   
 
 }
