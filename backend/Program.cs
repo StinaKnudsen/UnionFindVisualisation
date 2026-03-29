@@ -29,6 +29,7 @@ builder.Services.AddDbContext<DBContext>(options =>
 builder.Services.AddScoped<INodeEdgeRepository, NodeEdgeRepository>();
 builder.Services.AddScoped<NodeEdgeService>();
 builder.Services.AddScoped<UnionFindService>();
+builder.Services.AddScoped<WeightedUFService>();
 
 var app = builder.Build();
 
