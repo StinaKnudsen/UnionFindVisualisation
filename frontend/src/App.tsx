@@ -159,10 +159,21 @@ function App() {
   }
 };
 
-  const onEdgeClick = (edge: GraphEdge) => {
+  /*const onEdgeClick = (edge: GraphEdge) => {
     if (mode == "delete") {
       setEdges(prev => prev.filter(e => e.id !== edge.id));
       deleteEdgeInDb(edge.id).catch(err => console.error("Failed to delete edge:", err));
+    }
+  };*/
+
+  const removeLatestEdge = async () => {
+    if (mode == "delete") return;
+    const latest = edges[edges.length - 1];
+    try {
+      await deleteEdgeInDb(latest.id);
+      setEdges(prev => prev.slice(0, -1));
+    } catch (err) {
+      console.error("Failed to delete latest edge:", err);
     }
   };
 
@@ -176,8 +187,8 @@ function App() {
           <button onClick={() => setMode("create")} disabled={mode === "create"}>
             Create
           </button>
-          <button onClick={() => setMode("delete")} disabled={mode === "delete"}>
-            Delete
+          <button onClick={removeLatestEdge} disabled={mode === "delete"}>
+            Remove last edge
           </button>
         </div>
 
@@ -191,7 +202,7 @@ function App() {
           <svg width={520} height={560} style={{ border: "1px solid #ddd" }}>
             {/* Grid - left side */}
             {edges.map((e) => (
-              <Edge key={e.id} edge={e} onClick={onEdgeClick} />
+              <Edge key={e.id} edge={e} onClick={removeLatestEdge} />
             ))}
             {nodes.flat().map((n) => (
               <Node

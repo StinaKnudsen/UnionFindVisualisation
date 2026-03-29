@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/backend.csproj": {}
+    "/Users/olinekrebs/Desktop/ITU/SWU/10semester/BachelorProject/UnionFindVisualisation/backend/backend.csproj": {}
   },
   "projects": {
-    "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/backend.csproj": {
+    "/Users/olinekrebs/Desktop/ITU/SWU/10semester/BachelorProject/UnionFindVisualisation/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/backend.csproj",
+        "projectUniqueName": "/Users/olinekrebs/Desktop/ITU/SWU/10semester/BachelorProject/UnionFindVisualisation/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/backend.csproj",
-        "packagesPath": "/Users/albertebuelow/.nuget/packages/",
-        "outputPath": "/Users/albertebuelow/Desktop/6. Semester/Bachelor/UnionFindVisualisation/backend/obj/",
+        "projectPath": "/Users/olinekrebs/Desktop/ITU/SWU/10semester/BachelorProject/UnionFindVisualisation/backend/backend.csproj",
+        "packagesPath": "/Users/olinekrebs/.nuget/packages/",
+        "outputPath": "/Users/olinekrebs/Desktop/ITU/SWU/10semester/BachelorProject/UnionFindVisualisation/backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/albertebuelow/.nuget/NuGet/NuGet.Config"
+          "/Users/olinekrebs/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
