@@ -8,6 +8,9 @@ import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
 import Alert from '@mui/material/Alert';
 import { Tree } from './components/Tree';
+import IconButton from '@mui/material/IconButton';
+import UndoIcon from '@mui/icons-material/Undo';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 // to get data from backend
 type NodeDTO = { id: number; parent: number };
@@ -175,10 +178,14 @@ function App() {
     window.location.reload();
   }
 
-  const onEdgeClick = (edge: GraphEdge) => {
-    if (mode == "delete") {
-      setEdges(prev => prev.filter(e => e.id !== edge.id));
-      deleteEdgeInDb(edge.id).catch(err => console.error("Failed to delete edge:", err));
+  const removeLatestEdge = async () => {
+    if (mode == "delete") return;
+    const latest = edges[edges.length - 1];
+    try {
+      await deleteEdgeInDb(latest.id);
+      setEdges(prev => prev.slice(0, -1));
+    } catch (err) {
+      console.error("Failed to delete latest edge:", err);
     }
   };
 
@@ -187,16 +194,16 @@ function App() {
      <ModeContext.Provider value={mode}>
         <div style={{ padding: 24 }}>
         <h1>Union-Find Visualisation</h1>
-        
-        <button onClick={onClickReset}>Restart</button>
 
-        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          <button onClick={() => setMode("create")} disabled={mode === "create"}>
-            Create
-          </button>
-          <button onClick={() => setMode("delete")} disabled={mode === "delete"}>
-            Delete
-          </button>
+        <div style={{ display: "flex", gap: 325, marginBottom: 12 }}>
+          <IconButton onClick={onClickReset}>
+            <AutoAwesomeIcon sx={{ color: 'gold' }}/>
+            <span style={{ margin: '0 6px', color: 'black' }}>Restart</span>
+            <AutoAwesomeIcon sx={{ color: 'gold' }}/>
+            </IconButton>
+          <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
+            <UndoIcon sx={{ color: 'black' }} />
+          </IconButton>
         </div>
 
         { showDismissible &&(
@@ -209,7 +216,7 @@ function App() {
           <svg width={520} height={560} style={{ border: "1px solid #ddd" }}>
             {/* Grid - left side */}
             {edges.map((e) => (
-              <Edge key={e.id} edge={e} onClick={onEdgeClick} />
+              <Edge key={e.id} edge={e} onClick={removeLatestEdge} />
             ))}
             {nodes.flat().map((n) => (
               <Node
