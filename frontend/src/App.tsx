@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Node } from "./components/Node";
 import { Edge } from "./components/Edge";
 import type { GraphNode } from "./components/Node";
@@ -231,4 +231,3 @@ function App() {
 }
 
 export default App
-
