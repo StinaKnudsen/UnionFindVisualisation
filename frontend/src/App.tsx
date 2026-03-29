@@ -10,6 +10,7 @@ import Alert from '@mui/material/Alert';
 import { Tree } from './components/Tree';
 import IconButton from '@mui/material/IconButton';
 import UndoIcon from '@mui/icons-material/Undo';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 // to get data from backend
 type NodeDTO = { id: number; parent: number };
@@ -193,16 +194,17 @@ function App() {
      <ModeContext.Provider value={mode}>
         <div style={{ padding: 24 }}>
         <h1>Union-Find Visualisation</h1>
-        
-        <button onClick={onClickReset}>Restart</button>
+      
 
         <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          <button onClick={() => setMode("create")} disabled={mode === "create"}>
-            Create
-          </button>
           <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
-            <UndoIcon />
+            <UndoIcon sx={{ color: 'black' }} />
           </IconButton>
+          <IconButton onClick={onClickReset}>
+            <AutoAwesomeIcon sx={{ color: 'gold' }}/>
+            <span style={{ margin: '0 6px', color: 'black' }}>Restart</span>
+            <AutoAwesomeIcon sx={{ color: 'gold' }}/>
+            </IconButton>
         </div>
 
         { showDismissible &&(
