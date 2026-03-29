@@ -103,6 +103,17 @@ function App() {
     setUfNodes(updatedNodes);
   };
 
+  const clearDb = async () => {
+    const res = await fetch("http://localhost:5281/api/database/clear", {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error(msg);
+    }
+  }
+
   const onNodeClick = async (node: GraphNode) => {
 
   if (sourceNodeId === null && mode == "create") {
@@ -159,6 +170,11 @@ function App() {
   }
 };
 
+  const onClickReset = () => {
+    clearDb();
+    window.location.reload();
+  }
+
   const onEdgeClick = (edge: GraphEdge) => {
     if (mode == "delete") {
       setEdges(prev => prev.filter(e => e.id !== edge.id));
@@ -172,6 +188,8 @@ function App() {
         <div style={{ padding: 24 }}>
         <h1>Union-Find Visualisation</h1>
         
+        <button onClick={onClickReset}>Restart</button>
+
         <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
           <button onClick={() => setMode("create")} disabled={mode === "create"}>
             Create

@@ -95,4 +95,12 @@ app.MapGet("/api/nodes", async (DBContext dbContext) =>
     return Results.Ok(nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent }));
 });
 
+app.MapDelete("/api/database/clear", async (DBContext dbContext) => 
+{
+    await dbContext.Edges.ExecuteDeleteAsync();
+    await dbContext.Nodes.ExecuteDeleteAsync();
+
+    return Results.Ok();
+});
+
 app.Run();
