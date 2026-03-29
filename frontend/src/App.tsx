@@ -41,7 +41,6 @@ function App() {
   
   const size = 7;
   const [mode, setMode] = useState<Mode>("create");
-  const edgeCounter = useRef(0);
 
   const nodes: GraphNode[][] = Array.from({ length: size }, (_, row) =>
     Array.from({ length: size }, (_, col) => ({
