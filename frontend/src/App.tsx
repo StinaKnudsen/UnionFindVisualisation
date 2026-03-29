@@ -8,6 +8,8 @@ import { ModeContext } from "./context/ModeContext";
 import type { Mode } from "./context/ModeContext";
 import Alert from '@mui/material/Alert';
 import { Tree } from './components/Tree';
+import IconButton from '@mui/material/IconButton';
+import UndoIcon from '@mui/icons-material/Undo';
 
 // to get data from backend
 type NodeDTO = { id: number; parent: number };
@@ -198,9 +200,9 @@ function App() {
           <button onClick={() => setMode("create")} disabled={mode === "create"}>
             Create
           </button>
-          <button onClick={removeLatestEdge} disabled={mode === "delete"}>
-            Remove last edge
-          </button>
+          <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
+            <UndoIcon />
+          </IconButton>
         </div>
 
         { showDismissible &&(
