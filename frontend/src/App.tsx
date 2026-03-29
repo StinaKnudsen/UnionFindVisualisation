@@ -194,17 +194,16 @@ function App() {
      <ModeContext.Provider value={mode}>
         <div style={{ padding: 24 }}>
         <h1>Union-Find Visualisation</h1>
-      
 
-        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-          <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
-            <UndoIcon sx={{ color: 'black' }} />
-          </IconButton>
+        <div style={{ display: "flex", gap: 325, marginBottom: 12 }}>
           <IconButton onClick={onClickReset}>
             <AutoAwesomeIcon sx={{ color: 'gold' }}/>
             <span style={{ margin: '0 6px', color: 'black' }}>Restart</span>
             <AutoAwesomeIcon sx={{ color: 'gold' }}/>
             </IconButton>
+          <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
+            <UndoIcon sx={{ color: 'black' }} />
+          </IconButton>
         </div>
 
         { showDismissible &&(
