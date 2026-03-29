@@ -3,7 +3,7 @@ using backend.infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 // Implemented based on Algorithms 4th Edition by Sedgewick and Wayne p. 228
-public class WeightedUFService
+public class WeightedUFService : IUnionFindService
 {
     private readonly DBContext _db;
 
