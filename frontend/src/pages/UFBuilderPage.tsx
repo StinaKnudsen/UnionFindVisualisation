@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import UndoIcon from '@mui/icons-material/Undo';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Tree } from '../components/Tree';
+import "./UFBuilderPage.css";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RedoIcon from '@mui/icons-material/Redo';
@@ -19,6 +20,15 @@ type NodeDTO = { id: number; parent: number };
 
 // base URL for API calls
 const BASE = "http://localhost:5281/api";
+
+type colorTheme = {
+  selectedFill: string;
+  selectedStroke: string;
+  adjacentStroke: string;
+  defaultStroke: string;
+  defaultFill: string;
+  edgeStroke: string;
+};
 
 function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
 
@@ -213,15 +223,61 @@ function UFBuilderPage() {
     }
   };
 
+  const headerMap: Record<string, string> = {
+  UF: "Basic Union-Find",
+  WUF: "Weighted Union-Find",
+  PCUF: "Weighted Union-Find with Path Compression",
+};
+
+const treeBackgroundMap: Record<string, string> = {
+  UF: "#f6fff6",
+  WUF: "#f0faff",
+  PCUF: "#f5f4ff",
+};
+
+const colorScheme: Record<string, colorTheme> = {
+  UF: {
+    selectedFill: "#7ee081",
+    selectedStroke: "#1f7a1f",
+    adjacentStroke: "#33aa55",
+    defaultStroke: "#7a8a7a",
+    defaultFill: "#ffffff",
+    edgeStroke: "#2e8b57",
+  },
+  WUF: {
+    selectedFill: "#7fc8ff",
+    selectedStroke: "#1769aa",
+    adjacentStroke: "#3c8dff",
+    defaultStroke: "#7a8796",
+    defaultFill: "#ffffff",
+    edgeStroke: "#1e6fff",
+  },
+  PCUF: {
+    selectedFill: "#d7b3ff",
+    selectedStroke: "#7b3fc9",
+    adjacentStroke: "#a259ff",
+    defaultStroke: "#8a7d96",
+    defaultFill: "#ffffff",
+    edgeStroke: "#8e44ad",
+  },
+};
+
+const pageTitle = headerMap[UFType] ?? "Union-Find";
+const currentNodeTheme = colorScheme[UFType] ?? colorScheme.UF;
+const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
+
   return (
     <>
      <ModeContext.Provider value={mode}>
+      <div className={`builder-page builder-page--${UFType}`}>
         <div style={{ padding: 24 }}>
+        <h1 style={{ textAlign: "center" }}>{pageTitle}</h1>
+
         <IconButton onClick={() => navigate("/")} style={{ marginBottom: 12 }}>
             <ArrowBackIcon />
             Back
         </IconButton>
-        <h1>Union-Find Visualisation</h1>
+
 
         <div style={{ display: "flex", gap: 290, marginBottom: 12 }}>
           <IconButton onClick={onClickReset}>
@@ -249,7 +305,13 @@ function UFBuilderPage() {
           <svg width={520} height={560} style={{ border: "1px solid #ddd" }}>
             {/* Grid - left side */}
             {edges.map((e) => (
-              <Edge key={e.id} edge={e} />
+              <Edge
+                key={e.id}
+                edge={e}
+                onClick={removeLatestEdge}
+                theme={currentNodeTheme}
+              />
+
             ))}
             {nodes.flat().map((n) => (
               <Node
@@ -258,12 +320,14 @@ function UFBuilderPage() {
                 selectedId={selectedId}
                 onClick={onNodeClick}
                 isAdjacent={adjacentIds.includes(n.id)}
+                theme={currentNodeTheme}
               />
             ))}
           </svg>
 
           {/* Tree - right side */}
-          <Tree nodes={ufNodes} />
+          <Tree nodes={ufNodes} background={treeBg} />
+        </div>
         </div>
       </div>
     </ModeContext.Provider>
