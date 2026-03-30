@@ -6,10 +6,16 @@ export type GraphEdge = {
   endNode: GraphNode;
 };
 
+type colorTheme = {
+  edgeStroke: string;
+};
+
 type GraphProps = {
   edge: GraphEdge;
+  onClick:(edge: GraphEdge) => void;
+  theme: colorTheme;
 }
-export function Edge({ edge, onClick }: GraphProps) {
+export function Edge({ edge, onClick, theme }: GraphProps) {
     if (!edge) return null;
 
   return (
@@ -22,7 +28,7 @@ export function Edge({ edge, onClick }: GraphProps) {
       y1={edge.startNode.y}
       x2={edge.endNode.x}
       y2={edge.endNode.y}
-      stroke="orange"
+      stroke={theme.edgeStroke}
       strokeWidth={2}
     />
     </g>

@@ -56,9 +56,9 @@ function UnionCard({
 export default function UnionFindLanding() {
     const navigate = useNavigate();
   return (
-    <main className="uf-page">
-      <div className="uf-page__grid" aria-hidden="true" />
-      <div className="uf-page__dots" aria-hidden="true" />
+    <main className="landing-page">
+      <div className="landing-page__grid" aria-hidden="true" />
+      <div className="landing-page__dots" aria-hidden="true" />
 
       <section className="uf-hero">
         <h1 className="uf-hero__title">Choose a Union-Find version</h1>
@@ -94,7 +94,7 @@ export default function UnionFindLanding() {
           badgeText="Maximum speed"
           color="purple"
           icon={<img src={Lightning} className="uf-icon" />}
-          //onClick={() => navigate("/builder/basic")}
+          onClick={() => navigate("/builder/PCUF")}
         />
       </section>
     </main>
