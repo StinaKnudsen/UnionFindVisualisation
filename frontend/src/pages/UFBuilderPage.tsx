@@ -228,7 +228,7 @@ function UFBuilderPage() {
           <svg width={520} height={560} style={{ border: "1px solid #ddd" }}>
             {/* Grid - left side */}
             {edges.map((e) => (
-              <Edge key={e.id} edge={e} onClick={removeLatestEdge} />
+              <Edge key={e.id} edge={e} />
             ))}
             {nodes.flat().map((n) => (
               <Node
