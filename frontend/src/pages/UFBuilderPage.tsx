@@ -1,4 +1,3 @@
-import './App.css'
 import { useEffect, useMemo, useState } from "react";
 import { Node } from "../components/Node";
 import { Edge } from "../components/Edge";
