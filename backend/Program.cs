@@ -42,14 +42,26 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("AllowFrontend");
 
+// Helper function to determine which union-find service based on URL parameter
+// UPDATE THE STRINGS WHEN FRONTEND HAS ENDPOINTS
+IUnionFindService DetermineUF(string ufType, IServiceProvider sp) => ufType.ToUpper() switch
+{
+    "UF"    => sp.GetRequiredService<UnionFindService>(),
+    "WUF"   => sp.GetRequiredService<WeightedUFService>(),
+    // add path compression here
+    _       => throw new ArgumentException($"Unknown algorithm: {ufType}")
+};
+
 app.MapGet("/api/edges/{id:int}", async (int id, NodeEdgeService NEService) =>
 {
     var edge = await NEService.GetEdgeAsync(id);
     return edge is null ? Results.NotFound() : Results.Ok(edge);
 });
 
-app.MapPost("/api/edges", async (EdgeDTO edge, DBContext dbContext, UnionFindService uf) =>
+app.MapPost("/api/{ufType}/edges", async (string ufType, EdgeDTO edge, DBContext dbContext, IServiceProvider sp) =>
 {
+    var uf = DetermineUF(ufType, sp);
+
     var startNode = await dbContext.Nodes.FindAsync(edge.StartNodeId);
     if (startNode == null)
     {
@@ -81,8 +93,9 @@ app.MapPost("/api/edges", async (EdgeDTO edge, DBContext dbContext, UnionFindSer
 } 
 );
 
-app.MapDelete("/api/edges/{id:int}", async (int id, NodeEdgeService NEService, UnionFindService uf, DBContext dbContext) =>
+app.MapDelete("/api/{ufType}/edges/{id:int}", async (string ufType, int id, NodeEdgeService NEService, IServiceProvider sp, DBContext dbContext) =>
 {
+    var uf = DetermineUF(ufType, sp);
     await NEService.DeleteEdgeOnClick(id);
     await uf.RebuildAsync();
 
@@ -91,14 +104,14 @@ app.MapDelete("/api/edges/{id:int}", async (int id, NodeEdgeService NEService, U
 });
 
 // get all nodes
-app.MapGet("/api/nodes", async (DBContext dbContext) =>
+app.MapGet("/api/{ufType}/nodes", async (string ufType, DBContext dbContext) =>
 {
     var nodes = await dbContext.Nodes.ToListAsync();
     return Results.Ok(nodes.Select(n => new NodeDTO { Id = n.Id, Parent = n.Parent }));
 });
 
 // clear database
-app.MapDelete("/api/database/clear", async (DBContext dbContext) => 
+app.MapDelete("/api/{ufType}/database/clear", async (string ufType, DBContext dbContext) => 
 {
     await dbContext.Edges.ExecuteDeleteAsync();
     await dbContext.Nodes.ExecuteDeleteAsync();
