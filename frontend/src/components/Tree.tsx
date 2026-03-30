@@ -1,6 +1,13 @@
 type NodeDTO = { id: number; parent: number };
 
-type Props = { nodes: NodeDTO[] };
+type VisualTheme = {
+  background: string;
+}
+
+type Props = {
+  nodes: NodeDTO[];
+  background: string;
+};
 
 function buildTrees(nodes: NodeDTO[]): Map<number, number[]> {
   // children map: rootId -> all node ids in that tree
@@ -41,7 +48,7 @@ function layoutSubtree(
   positions.set(nodeId, { x: (kids.length === 0 ? xOffset.val - 1 : x) * NODE_SPACING, y: depth * LEVEL_H });
 }
 
-export function Tree({ nodes }: Props) {
+export function Tree({ nodes, background }: Props) {
   const roots = nodes.filter(n => n.parent === -1);
   const children = buildTrees(nodes);
 
@@ -66,7 +73,10 @@ export function Tree({ nodes }: Props) {
             <div style={{ fontSize: 13, color: "#555", marginBottom: 4 }}>
               Root: <strong>{root.id}</strong>
             </div>
-            <svg width={svgW} height={svgH} style={{ border: "1px solid #eee", borderRadius: 6, background: "#fafafa" }}>
+            <svg
+                width={svgW}
+                height={svgH}
+                style={{ background }} >
               <g transform={`translate(${offsetX}, ${PAD})`}>
                 {nodes.filter(n => n.parent !== -1).map(n => {
                   const from = positions.get(n.parent);
@@ -79,7 +89,7 @@ export function Tree({ nodes }: Props) {
                   if (!pos) return null;
                   return (
                     <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
-                      <circle r={18} fill={n.id === root.id ? "#c8e6c9" : "white"} stroke={n.id === root.id ? "#388e3c" : "#90a4ae"} strokeWidth={n.id === root.id ? 2.5 : 1.5} />
+                      <circle r={18} fill={n.id === root.id ? "#f199ca" : "white"} stroke={n.id === root.id ? "#e4278f" : "#de9abf"} strokeWidth={n.id === root.id ? 2.5 : 1.5} />
                       <text textAnchor="middle" dominantBaseline="middle" fontSize={12} style={{ userSelect: "none" }}>{n.id}</text>
                     </g>
                   );
