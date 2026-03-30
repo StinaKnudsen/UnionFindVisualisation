@@ -8,7 +8,6 @@ export type GraphEdge = {
 
 type GraphProps = {
   edge: GraphEdge;
-  onClick:(edge: GraphEdge) => void;
 }
 export function Edge({ edge, onClick }: GraphProps) {
     if (!edge) return null;
