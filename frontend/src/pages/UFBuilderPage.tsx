@@ -10,7 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import UndoIcon from '@mui/icons-material/Undo';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Tree } from '../components/Tree';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // to get data from backend
 type NodeDTO = { id: number; parent: number };
@@ -44,6 +45,7 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
 }
 
 function UFBuilderPage() {
+  const navigate = useNavigate();
 
   // React Router hook to reuse code across different union-find implementations
   const { ufType } = useParams<{ ufType: string }>();
@@ -199,16 +201,20 @@ function UFBuilderPage() {
     <>
      <ModeContext.Provider value={mode}>
         <div style={{ padding: 24 }}>
+        <IconButton onClick={() => navigate("/")} style={{ marginBottom: 12 }}>
+            <ArrowBackIcon />
+            Back
+        </IconButton>
         <h1>Union-Find Visualisation</h1>
 
         <div style={{ display: "flex", gap: 325, marginBottom: 12 }}>
           <IconButton onClick={onClickReset}>
             <AutoAwesomeIcon sx={{ color: 'gold' }}/>
-            <span style={{ margin: '0 6px', color: 'black' }}>Restart</span>
+            <span style={{ margin: '0 6px' }}>Restart</span>
             <AutoAwesomeIcon sx={{ color: 'gold' }}/>
             </IconButton>
           <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
-            <UndoIcon sx={{ color: 'black' }} />
+            <UndoIcon />
           </IconButton>
         </div>
 
