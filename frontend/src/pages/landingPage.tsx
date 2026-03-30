@@ -3,6 +3,8 @@ import "./landingPage.css";
 import Scale from "../icons/scale.png";
 import Tree from "../icons/tree.png";
 import Lightning from "../icons/lightning.png"
+import { useNavigate } from "react-router-dom";
+
 
 
 type CardColor = "green" | "blue" | "purple";
@@ -52,6 +54,7 @@ function UnionCard({
 }
 
 export default function UnionFindLanding() {
+    const navigate = useNavigate();
   return (
     <main className="uf-page">
       <div className="uf-page__grid" aria-hidden="true" />
@@ -73,6 +76,7 @@ export default function UnionFindLanding() {
           badgeText="Start here"
           color="green"
           icon={<img src={Tree} className="uf-icon" />}
+          onClick={() => navigate("/builder/UF")}
         />
 
         <UnionCard
@@ -81,6 +85,7 @@ export default function UnionFindLanding() {
           badgeText="Improves performance"
           color="blue"
           icon={<img src={Scale} className="uf-icon" />}
+          onClick={() => navigate("/builder/WUF")}
         />
 
         <UnionCard
@@ -89,6 +94,7 @@ export default function UnionFindLanding() {
           badgeText="Maximum speed"
           color="purple"
           icon={<img src={Lightning} className="uf-icon" />}
+          //onClick={() => navigate("/builder/basic")}
         />
       </section>
     </main>
