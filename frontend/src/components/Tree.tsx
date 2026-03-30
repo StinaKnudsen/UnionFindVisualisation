@@ -53,8 +53,15 @@ export function Tree({ nodes, background }: Props) {
   const children = buildTrees(nodes);
 
   return (
-    <div style={{ flex: 1, borderLeft: "1px solid #ddd", padding: 16, minWidth: 300 }}>
-      <h2 style={{ marginTop: 0 }}>Union-Find Trees</h2>
+    <div
+        style={{
+          width: 870,
+          height: 500,
+          padding: "4px 12px 12px 12px",
+          maxHeight: "600px",
+          overflow: "auto",
+        }}
+      >
       {roots.length === 0 && <p style={{ color: "#888" }}>Connect nodes to see trees.</p>}
       {roots.map(root => {
         const positions = new Map<number, { x: number; y: number }>();
@@ -74,9 +81,12 @@ export function Tree({ nodes, background }: Props) {
               Root: <strong>{root.id}</strong>
             </div>
             <svg
-                width={svgW}
+                width="100%"
                 height={svgH}
-                style={{ background }} >
+                viewBox={`0 0 ${svgW} ${svgH}`}
+                preserveAspectRatio="xMinYMin meet"
+                style={{ background }}
+              >
               <g transform={`translate(${offsetX}, ${PAD})`}>
                 {nodes.filter(n => n.parent !== -1).map(n => {
                   const from = positions.get(n.parent);
