@@ -13,6 +13,7 @@ import { Tree } from '../components/Tree';
 import "./UFBuilderPage.css";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RedoIcon from '@mui/icons-material/Redo';
 
 // to get data from backend
 type NodeDTO = { id: number; parent: number };
@@ -84,6 +85,7 @@ function UFBuilderPage() {
       [adjacentNodes]
     );
   const [showDismissible, setShowDismissible] = useState(false);
+  const [redoStack, setRedoStack] = useState<GraphEdge[]>([]);
 
   useEffect(() => {
     fetch(`${BASE}/${UFType}/nodes`)
@@ -186,6 +188,7 @@ function UFBuilderPage() {
         startNode: start, 
         endNode: node }
     ]);
+    setRedoStack([]);  // clear redo stack on new edge
   } catch (err) {
     console.error("Failed to create edge in DB:", err);
   }
@@ -197,13 +200,26 @@ function UFBuilderPage() {
   }
 
   const removeLatestEdge = async () => {
-    if (mode == "delete") return;
+    if (edges.length === 0) return;
     const latest = edges[edges.length - 1];
     try {
       await deleteEdgeInDb(latest.id);
       setEdges(prev => prev.slice(0, -1));
+      setRedoStack(prev => [...prev, latest]);
     } catch (err) {
       console.error("Failed to delete latest edge:", err);
+    }
+  };
+
+  const redoLatestEdge = async () => {
+    if (redoStack.length === 0) return;
+    const latest = redoStack[redoStack.length - 1];
+    try {
+      const dbEdgeId = await createEdgeInDb(latest.startNode.id, latest.endNode.id);
+      setEdges(prev => [...prev, { ...latest, id: dbEdgeId }]);
+      setRedoStack(prev => prev.slice(0, -1));
+    } catch (err) {
+      console.error("Failed to redo edge:", err);
     }
   };
 
@@ -263,15 +279,20 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         </IconButton>
 
 
-        <div style={{ display: "flex", gap: 325, marginBottom: 12 }}>
+        <div style={{ display: "flex", gap: 290, marginBottom: 12 }}>
           <IconButton onClick={onClickReset}>
             <AutoAwesomeIcon sx={{ color: 'gold' }}/>
             <span style={{ margin: '0 6px' }}>Restart</span>
             <AutoAwesomeIcon sx={{ color: 'gold' }}/>
             </IconButton>
-          <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
-            <UndoIcon />
-          </IconButton>
+          <div>
+            <IconButton onClick={removeLatestEdge} disabled={edges.length === 0}>
+              <UndoIcon />
+            </IconButton>
+            <IconButton onClick={redoLatestEdge} disabled={redoStack.length === 0}>
+              <RedoIcon />
+            </IconButton>
+          </div>
         </div>
 
         { showDismissible &&(
