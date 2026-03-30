@@ -43,7 +43,7 @@ using (var scope = app.Services.CreateScope())
 app.UseCors("AllowFrontend");
 
 // Helper function to determine which union-find service based on URL parameter
-// UPDATE WHEN FRONTEND HAS ENDPOINTS
+// UPDATE THE STRINGS WHEN FRONTEND HAS ENDPOINTS
 IUnionFindService DetermineUF(string ufType, IServiceProvider sp) => ufType.ToUpper() switch
 {
     "UF"    => sp.GetRequiredService<UnionFindService>(),
