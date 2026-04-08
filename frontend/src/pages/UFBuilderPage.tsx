@@ -271,8 +271,8 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
               left: 0,
             }}
           >
-            <ArrowBackIcon />
-            Back
+          <ArrowBackIcon />
+            <span style={{ fontSize: "1.2rem" }}>Back to Main Menu</span>
           </IconButton>
 
           <h2
@@ -336,7 +336,8 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
             marginLeft: 8,
           }}
         >
-          <h2 style={{ marginTop: 0, marginBottom: 12 }}>Union-Find Trees</h2>
+          <h2 style={{ marginTop: 0, marginBottom: 8, color: "rgba(0, 0, 0, 0.54)" }}>Union-Find Trees</h2>
+
           <Tree nodes={ufNodes} background={treeBg} />
         </div>
       </div>
