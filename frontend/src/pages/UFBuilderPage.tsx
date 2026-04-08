@@ -281,7 +281,7 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
           }}
         >
           <IconButton
-            onClick={() => navigate("/")}
+            onClick={() => { clearDb(); navigate("/"); }}
             style={{
               position: "absolute",
               left: 0,
