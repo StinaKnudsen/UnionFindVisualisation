@@ -137,22 +137,28 @@ function UFBuilderPage() {
     }
   }
 
+
   const onNodeClick = async (node: GraphNode) => {
 
-  if (sourceNodeId === null && mode == "create") {
-    // First click -> select source
-    setSourceNodeId(node.id); //for setting edges
-    setSelectedId(node.id); //source node is ALWAYS highlighted with pink, for visibility
+  if (sourceNodeId === null && mode === "create") {
+  setSourceNodeId(node.id);
+  setSelectedId(node.id);
 
-    /*
-    because the adjacent notes should be highlighted when rendering, it should be a constant.
-    The function call getAdjacentNodes(nodes, node.row, node.col) returns an array of objects, and .map(x => x.node)
-    converts each object into a node by looping through the returned array
-    */
-    setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
-    console.log("source node id is " +  node.id);
-    return;
-  }
+  const neighbours = getAdjacentNodes(nodes, node.row, node.col)
+    .map(x => x.node)
+    .filter(neighbour =>
+      !edges.some(
+        e =>
+          (e.startNode.id === node.id && e.endNode.id === neighbour.id) ||
+          (e.startNode.id === neighbour.id && e.endNode.id === node.id)
+      )
+    );
+
+  setAdjacentNodes(neighbours);
+  return;
+}
+
+  
 
   if (sourceNodeId === node.id && mode == "create") {
     // Clicking the same node twice -> reset
@@ -174,6 +180,8 @@ function UFBuilderPage() {
     setAdjacentNodes([]);
     return;
   }
+
+  
 
   setSourceNodeId(null);
   setSelectedId(null);
