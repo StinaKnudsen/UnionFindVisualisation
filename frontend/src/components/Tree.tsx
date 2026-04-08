@@ -1,9 +1,5 @@
 type NodeDTO = { id: number; parent: number };
 
-type VisualTheme = {
-  background: string;
-}
-
 type Props = {
   nodes: NodeDTO[];
   background: string;
@@ -35,7 +31,6 @@ function layoutSubtree(
   const NODE_SPACING = 50;
 
   const kids = children.get(nodeId) ?? [];
-  const startX = xOffset.val;
 
   for (const child of kids) {
     layoutSubtree(child, children, depth + 1, xOffset, positions);
@@ -54,16 +49,16 @@ export function Tree({ nodes, background }: Props) {
 
   return (
     <div
-        style={{
-          width: 870,
-          height: 500,
-          padding: "4px 12px 12px 12px",
-          maxHeight: "600px",
-          overflow: "auto",
-          display: "flex",        
-          flexWrap: "wrap",
-        }}
-      >
+      style={{
+        width: 870,
+        height: 500,
+        padding: "4px 12px 12px 12px",
+        maxHeight: "600px",
+        overflow: "auto",
+        display: "flex",
+        flexWrap: "wrap",
+      }}
+    >
       {roots.length === 0 && <p style={{ color: "#888" }}>Connect nodes to see trees.</p>}
       {roots.map(root => {
         const positions = new Map<number, { x: number; y: number }>();
@@ -80,12 +75,12 @@ export function Tree({ nodes, background }: Props) {
         return (
           <div key={root.id} style={{ marginBottom: 24 }}>
             <svg
-                width="100%"
-                height={svgH + 20}
-                viewBox={`0 0 ${svgW} ${svgH}`}
-                preserveAspectRatio="xMinYMin meet"
-                style={{ background }}
-              >
+              width="100%"
+              height={svgH + 20}
+              viewBox={`0 0 ${svgW} ${svgH}`}
+              preserveAspectRatio="xMinYMin meet"
+              style={{ background }}
+            >
               <g transform={`translate(${offsetX}, ${PAD + 20})`}>
                 {nodes.filter(n => n.parent !== -1).map(n => {
                   const from = positions.get(n.parent);
@@ -94,25 +89,34 @@ export function Tree({ nodes, background }: Props) {
                   return <line key={`e-${n.id}`} x1={from.x} y1={from.y} x2={to.x} y2={to.y} stroke="#aaa" strokeWidth={1.5} />;
                 })}
                 {nodes.map(n => {
-          const pos = positions.get(n.id);
-          if (!pos) return null;
-          const isRoot = n.id === root.id;
-          return (
-            <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
-              {isRoot && (
-                <text
-                  textAnchor="middle"
-                  dominantBaseline="auto"
-                  fontSize={11}
-                  fill="#555"
-                  y={-35}
-                >
-                  Root: <tspan fontWeight="bold">{n.id}</tspan>
-                </text>
-              )}
-              <circle r={18} fill={isRoot ? "#f199ca" : "white"} stroke={isRoot ? "#e4278f" : "#de9abf"} strokeWidth={isRoot ? 2.5 : 1.5} />
-              <text textAnchor="middle" dominantBaseline="middle" fontSize={12} style={{ userSelect: "none" }}>{n.id}</text>
-              </g>
+                  const pos = positions.get(n.id);
+                  if (!pos) return null;
+                  const isRoot = n.id === root.id;
+                  return (
+                    <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
+                      {isRoot && (
+                        <text
+                          textAnchor="middle"
+                          dominantBaseline="auto"
+                          fontSize={11}
+                          fill="#555"
+                          y={-35}
+                        >
+                          Root: <tspan fontWeight="bold">{n.id}</tspan>
+                        </text>
+                      )}
+                      <circle
+                        r={18}
+                        fill={n.id === root.id ? "#f199ca" : "white"}
+                        stroke={n.id === root.id ? "#e4278f" : "#de9abf"}
+                        strokeWidth={n.id === root.id ? 2.5 : 1.5}
+                      />
+                      <text
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize={12} style={{ userSelect: "none" }}>{n.id}
+                      </text>
+                    </g>
                   );
                 })}
               </g>
