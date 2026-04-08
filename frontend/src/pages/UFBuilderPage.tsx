@@ -75,7 +75,15 @@ function UFBuilderPage() {
     }))
   );
 
-  const [ufNodes, setUfNodes] = useState<NodeDTO[]>([]);
+  const [ufNodes, setUfNodes] = useState<NodeDTO[]>([]); // raw, for Tree
+  const normalize = (data: NodeDTO[]): NodeDTO[] =>
+    Array.from({ length: 49 }, (_, i) => {
+      const found = data.find(n => n.id === i);
+      return { id: i, parent: found ? (found.parent === -1 ? i : found.parent) : i };
+    });
+  const [displayNodes, setDisplayNodes] = useState<NodeDTO[]>(
+    Array.from({ length: 49 }, (_, i) => ({ id: i, parent: i }))
+  ); // normalized, for parent array
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -90,7 +98,12 @@ function UFBuilderPage() {
   useEffect(() => {
     fetch(`${BASE}/${UFType}/nodes`)
       .then(r => r.json())
-      .then(setUfNodes)
+      .then((data: NodeDTO[]) => {
+        if (data && data.length > 0) {
+          setUfNodes(data);
+          setDisplayNodes(normalize(data));
+        }
+      })
       .catch(err => console.error("Failed to fetch nodes:", err));
   }, [UFType]);
 
@@ -109,6 +122,7 @@ function UFBuilderPage() {
     // returns flat node list and feeds it into ufNodes
     const { edgeId, nodes: updatedNodes } = await res.json();
     setUfNodes(updatedNodes);
+    setDisplayNodes(normalize(updatedNodes));
     return edgeId;
   };
 
@@ -124,6 +138,7 @@ function UFBuilderPage() {
 
     const updatedNodes = await res.json();
     setUfNodes(updatedNodes);
+    setDisplayNodes(normalize(updatedNodes));
   };
 
   const clearDb = async () => {
@@ -361,6 +376,40 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
           <Tree nodes={ufNodes} background={treeBg} />
         </div>
       </div>
+      {/* === parent array below both === */}
+        <div style={{ marginTop: 24 }}>
+          <h3 style={{ marginBottom: 8, fontSize: 14, color: "#555" }}>Parent array</h3>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ borderCollapse: "collapse" }}>
+              <tbody>
+                {/* Row 1: node indices */}
+                <tr>
+                  {displayNodes.map(({ id }) => (
+                    <td key={id} style={{ textAlign: "center", padding: "4px 6px", fontSize: 12, color: "#888", borderBottom: "0.5px solid #ccc" }}>
+                      {id}
+                    </td>
+                  ))}
+                </tr>
+                {/* Row 2: parent values */}
+                <tr>
+                  {displayNodes.map(({ id, parent }) => (
+                    <td key={id} style={{
+                      textAlign: "center",
+                      padding: "4px 6px",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      background: parent === id ? "#f5f5f5" : "#b5d4f4",
+                      color: parent === id ? "#333" : "#042c53",
+                      border: "0.5px solid #ccc"
+                    }}>
+                      {parent}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       </div>
     </ModeContext.Provider>
