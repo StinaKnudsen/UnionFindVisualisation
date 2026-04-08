@@ -60,6 +60,8 @@ export function Tree({ nodes, background }: Props) {
           padding: "4px 12px 12px 12px",
           maxHeight: "600px",
           overflow: "auto",
+          display: "flex",        
+          flexWrap: "wrap",
         }}
       >
       {roots.length === 0 && <p style={{ color: "#888" }}>Connect nodes to see trees.</p>}
@@ -70,24 +72,21 @@ export function Tree({ nodes, background }: Props) {
 
         const xs = [...positions.values()].map(p => p.x);
         const ys = [...positions.values()].map(p => p.y);
-        const PAD = 30;
+        const PAD = 40;
         const svgW = Math.max(...xs) - Math.min(...xs) + PAD * 2;
         const svgH = Math.max(...ys) + PAD * 2;
         const offsetX = -Math.min(...xs) + PAD;
 
         return (
           <div key={root.id} style={{ marginBottom: 24 }}>
-            <div style={{ fontSize: 13, color: "#555", marginBottom: 4 }}>
-              Root: <strong>{root.id}</strong>
-            </div>
             <svg
                 width="100%"
-                height={svgH}
+                height={svgH + 20}
                 viewBox={`0 0 ${svgW} ${svgH}`}
                 preserveAspectRatio="xMinYMin meet"
                 style={{ background }}
               >
-              <g transform={`translate(${offsetX}, ${PAD})`}>
+              <g transform={`translate(${offsetX}, ${PAD + 20})`}>
                 {nodes.filter(n => n.parent !== -1).map(n => {
                   const from = positions.get(n.parent);
                   const to = positions.get(n.id);
@@ -95,13 +94,25 @@ export function Tree({ nodes, background }: Props) {
                   return <line key={`e-${n.id}`} x1={from.x} y1={from.y} x2={to.x} y2={to.y} stroke="#aaa" strokeWidth={1.5} />;
                 })}
                 {nodes.map(n => {
-                  const pos = positions.get(n.id);
-                  if (!pos) return null;
-                  return (
-                    <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
-                      <circle r={18} fill={n.id === root.id ? "#f199ca" : "white"} stroke={n.id === root.id ? "#e4278f" : "#de9abf"} strokeWidth={n.id === root.id ? 2.5 : 1.5} />
-                      <text textAnchor="middle" dominantBaseline="middle" fontSize={12} style={{ userSelect: "none" }}>{n.id}</text>
-                    </g>
+          const pos = positions.get(n.id);
+          if (!pos) return null;
+          const isRoot = n.id === root.id;
+          return (
+            <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
+              {isRoot && (
+                <text
+                  textAnchor="middle"
+                  dominantBaseline="auto"
+                  fontSize={11}
+                  fill="#555"
+                  y={-35}
+                >
+                  Root: <tspan fontWeight="bold">{n.id}</tspan>
+                </text>
+              )}
+              <circle r={18} fill={isRoot ? "#f199ca" : "white"} stroke={isRoot ? "#e4278f" : "#de9abf"} strokeWidth={isRoot ? 2.5 : 1.5} />
+              <text textAnchor="middle" dominantBaseline="middle" fontSize={12} style={{ userSelect: "none" }}>{n.id}</text>
+              </g>
                   );
                 })}
               </g>
