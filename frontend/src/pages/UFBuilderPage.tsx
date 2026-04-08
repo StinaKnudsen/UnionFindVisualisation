@@ -311,9 +311,14 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         <AutoAwesomeIcon sx={{ color: "gold" }} />
       </IconButton>
 
-      <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
+      <div>
+      <IconButton onClick={removeLatestEdge} disabled={edges.length === 0}>
         <UndoIcon />
       </IconButton>
+      <IconButton onClick={redoLatestEdge} disabled={redoStack.length === 0}>
+        <RedoIcon />
+      </IconButton>
+      </div>
     </div>
 
     {showDismissible && (
@@ -327,7 +332,6 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
             <Edge
               key={e.id}
               edge={e}
-              onClick={removeLatestEdge}
               theme={currentNodeTheme}
             />
           ))}
