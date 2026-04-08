@@ -69,7 +69,7 @@ function UFBuilderPage() {
     Array.from({ length: size }, (_, col) => ({
       id: col + row * size,
       x: 40 + col * 70,
-      y: 70 + row * 70,
+      y: 23 + row * 70,
       row,
       col
     }))
@@ -270,65 +270,93 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
     <>
      <ModeContext.Provider value={mode}>
       <div className={`builder-page builder-page--${UFType}`}>
-        <div style={{ padding: 24 }}>
-        <h1 style={{ textAlign: "center" }}>{pageTitle}</h1>
-
-        <IconButton onClick={() => navigate("/")} style={{ marginBottom: 12 }}>
+        <div style={{ padding: "8px 24px 24px 24px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "relative",
+            marginBottom: 16,
+          }}
+        >
+          <IconButton
+            onClick={() => navigate("/")}
+            style={{
+              position: "absolute",
+              left: 0,
+            }}
+          >
             <ArrowBackIcon />
             Back
-        </IconButton>
+          </IconButton>
 
-
-        <div style={{ display: "flex", gap: 290, marginBottom: 12 }}>
-          <IconButton onClick={onClickReset}>
-            <AutoAwesomeIcon sx={{ color: 'gold' }}/>
-            <span style={{ margin: '0 6px' }}>Restart</span>
-            <AutoAwesomeIcon sx={{ color: 'gold' }}/>
-            </IconButton>
-          <div>
-            <IconButton onClick={removeLatestEdge} disabled={edges.length === 0}>
-              <UndoIcon />
-            </IconButton>
-            <IconButton onClick={redoLatestEdge} disabled={redoStack.length === 0}>
-              <RedoIcon />
-            </IconButton>
-          </div>
+          <h2
+            style={{
+              margin: 0,
+              fontSize: "2.5rem",
+              textAlign: "center",
+            }}
+          >
+            {pageTitle}
+          </h2>
         </div>
-
-        { showDismissible &&(
-          <Alert severity="error"  onClose={() => {setShowDismissible(false)}}>
-          You can only create an edge between two adjacent nodes 
-        </Alert>)}
-        
-
+      
         <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-          <svg width={520} height={560} style={{ border: "1px solid #ddd" }}>
-            {/* Grid - left side */}
-            {edges.map((e) => (
-              <Edge
-                key={e.id}
-                edge={e}
-                onClick={removeLatestEdge}
-                theme={currentNodeTheme}
-              />
+  <div style={{ width: 480 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+      <IconButton onClick={onClickReset}>
+        <AutoAwesomeIcon sx={{ color: "gold" }} />
+        <span style={{ margin: "0 6px" }}>Restart</span>
+        <AutoAwesomeIcon sx={{ color: "gold" }} />
+      </IconButton>
 
-            ))}
-            {nodes.flat().map((n) => (
-              <Node
-                key={n.id}
-                node={n}
-                selectedId={selectedId}
-                onClick={onNodeClick}
-                isAdjacent={adjacentIds.includes(n.id)}
-                theme={currentNodeTheme}
-              />
-            ))}
-          </svg>
+      <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
+        <UndoIcon />
+      </IconButton>
+    </div>
 
-          {/* Tree - right side */}
+    {showDismissible && (
+      <Alert severity="error" onClose={() => setShowDismissible(false)}>
+        You can only create an edge between two adjacent nodes
+      </Alert>
+    )}
+
+        <svg width={520} height={480}>
+          {edges.map((e) => (
+            <Edge
+              key={e.id}
+              edge={e}
+              onClick={removeLatestEdge}
+              theme={currentNodeTheme}
+            />
+          ))}
+
+          {nodes.flat().map((n) => (
+            <Node
+              key={n.id}
+              node={n}
+              selectedId={selectedId}
+              onClick={onNodeClick}
+              isAdjacent={adjacentIds.includes(n.id)}
+              theme={currentNodeTheme}
+            />
+          ))}
+        </svg>
+      </div>
+        <div
+          style={{
+            flex: 1,
+            borderLeft: "1px solid #d0d0d0",
+            paddingLeft: 20,
+            marginLeft: 8,
+          }}
+        >
+          <h2 style={{ marginTop: 0, marginBottom: 12 }}>Union-Find Trees</h2>
           <Tree nodes={ufNodes} background={treeBg} />
         </div>
-        </div>
+      </div>
+      </div>
       </div>
     </ModeContext.Provider>
     </>
