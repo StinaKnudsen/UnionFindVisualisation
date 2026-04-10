@@ -20,7 +20,7 @@ public class PathCompressionUFService : IUnionFindService
             throw new Exception($"Node {nodeId} not found");
 
         // Base case: this node is its own root
-        if (nodes[nodeId].Parent == -1)
+        if (nodes[nodeId].Parent == nodeId)
             return nodeId;
 
         // Recurse to find root, then point current node directly to it
@@ -70,7 +70,7 @@ public class PathCompressionUFService : IUnionFindService
 
     public async Task<int> CountAsync()
     {
-        return await _db.Nodes.CountAsync(n => n.Parent == -1);
+        return await _db.Nodes.CountAsync(n => n.Parent == n.Id);
     }
 
     public async Task RebuildAsync()
@@ -78,7 +78,7 @@ public class PathCompressionUFService : IUnionFindService
         var allNodes = await _db.Nodes.ToListAsync();
         foreach (var node in allNodes)
         {
-            node.Parent = -1;
+            node.Parent = node.Id;
             node.Size = 1;
         }
         await _db.SaveChangesAsync();

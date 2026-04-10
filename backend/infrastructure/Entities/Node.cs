@@ -8,8 +8,8 @@ public class Node
     public required int Id {get; set;}
     public List<Edge>? Edges {get; set;}
     
-    // -1 = root
-    public int Parent {get; set;} = -1; 
+    // parent should be set to itself upon initialization
+    public int Parent {get; set;} 
     
     // used by root nodes to track size of tree
     public int Size { get; set; } = 1;
