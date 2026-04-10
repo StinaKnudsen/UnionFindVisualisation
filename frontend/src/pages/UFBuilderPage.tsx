@@ -49,7 +49,7 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     if (col < cols - 1) { adjacent.push({ node: nodes[row][col + 1]}); }
 
     for(var element of adjacent){
-      console.log("neighbour ids: " + element.node.id);
+      console.log("neighbor ids: " + element.node.id);
       console.log("node row: "+ element.node.row + " node col: " + element.node.col);
     }
     return adjacent;
@@ -64,7 +64,7 @@ function getPathToRoot(startId: number, ufNodes: NodeDTO[]): number[] {
     visited.add(current);
     path.push(current);
     const dto = ufNodes.find(n => n.id === current);
-    if (!dto || dto.parent === current) break;
+    if (!dto || dto.parent === current || dto.parent === -1) break;
     current = dto.parent;
   }
   return path;
@@ -163,17 +163,17 @@ function UFBuilderPage() {
       setSourceNodeId(node.id);
       setSelectedId(node.id);
 
-      const neighbours = getAdjacentNodes(nodes, node.row, node.col)
+      const neighbors = getAdjacentNodes(nodes, node.row, node.col)
         .map(x => x.node)
-        .filter(neighbour =>
+        .filter(neighbor =>
           !edges.some(
             e =>
-              (e.startNode.id === node.id && e.endNode.id === neighbour.id) ||
-              (e.startNode.id === neighbour.id && e.endNode.id === node.id)
+              (e.startNode.id === node.id && e.endNode.id === neighbor.id) ||
+              (e.startNode.id === neighbor.id && e.endNode.id === node.id)
           )
         );
 
-      setAdjacentNodes(neighbours);
+      setAdjacentNodes(neighbors);
       return;
     }
   
@@ -203,7 +203,7 @@ function UFBuilderPage() {
     setAdjacentNodes([]);
 
     try {
-      const preUnionNodes = [...ufNodes];
+      const preUnionNodes = ufNodes.map(n => ({ ...n }));
 
       const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(start.id, node.id);
       setUfNodes(updatedNodes);
