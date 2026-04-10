@@ -273,9 +273,13 @@ function UFBuilderPage() {
     const edgePairs = new Set<string>();
     for (const path of [pathA, pathB]) {
       for (let i = 0; i < path.length - 1; i++) {
-        edgePairs.add(`${path[i + 1]}-${path[i]}`);
+        edgePairs.add(`${path[i]}-${path[i + 1]}`);
       }
     }
+
+    console.log("pathA:", pathA);
+    console.log("pathB:", pathB);
+    console.log("edgePairs:", [...edgePairs]);
 
     setFindNodeIds(nodeIds);
     setFindEdgePairs(edgePairs);
