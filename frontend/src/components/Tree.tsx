@@ -14,7 +14,7 @@ function buildTrees(nodes: NodeDTO[]): Map<number, number[]> {
 
   for (const node of nodes) {
     if (!children.has(node.id)) children.set(node.id, []);
-    if (node.parent !== -1) {
+    if (node.parent !== node.id) {
       if (!children.has(node.parent)) children.set(node.parent, []);
       children.get(node.parent)!.push(node.id);
     }
@@ -47,7 +47,7 @@ function layoutSubtree(
 }
 
 export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChildId }: Props) {
-  const roots = nodes.filter(n => n.parent === -1);
+  const roots = nodes.filter(n => n.parent === n.id);
   const children = buildTrees(nodes);
 
   return (
@@ -85,7 +85,7 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
               style={{ background }}
             >
               <g transform={`translate(${offsetX}, ${PAD + 20})`}>
-                {nodes.filter(n => n.parent !== -1).map(n => {
+                {nodes.filter(n => n.parent !== n.id).map(n => {
                   const from = positions.get(n.parent);
                   const to = positions.get(n.id);
                   if (!from || !to) return null;
@@ -98,7 +98,7 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
                     key={`e-${n.id}`} 
                     x1={from.x} y1={from.y} 
                     x2={to.x} y2={to.y} 
-                    stroke={isUnion ? "#c74444" : isFind ? "#333" : "#aaa"}
+                    stroke={isUnion ? "#c74444" : isFind ? "#f4ea28" : "#aaa"}
                     strokeWidth={isFind ? 5 : isUnion ? 3 : 1.5}
                     style={{ transition: "stroke 0.3s, stroke-width 0.3s" }} 
                     />;
@@ -110,6 +110,8 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
                   const isRoot = n.id === root.id;
                   const isFind  = findNodeIds?.has(n.id) ?? false;
                   const isUnion = unionChildId === n.id;
+
+                  if (isUnion) { console.log("union line:", n.id, "->", n.parent); }
 
                   return (
                     <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
@@ -126,8 +128,8 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
                       )}
                       <circle
                         r={18}
-                        fill={isUnion ? "#ffcdd2" : isFind ? "#e8ccdb" : isRoot ? "#f199ca" : "white"}
-                        stroke={ isFind ? "#de9abf" : isRoot ? "#e4278f" : "#de9abf"}
+                        fill={isUnion ? "#ffcdd2" : isFind ? "#f1e75a" : isRoot ? "#f199ca" : "white"}
+                        stroke={ isFind ? "#f5fe7b" : isRoot ? "#e4278f" : "#de9abf"}
                         strokeWidth={isFind || isUnion || isRoot ? 2.5 : 1.5}
                         style={{ transition: "fill 0.3s, stroke 0.3s" }}
                       />

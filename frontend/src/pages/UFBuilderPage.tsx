@@ -64,7 +64,7 @@ function getPathToRoot(startId: number, ufNodes: NodeDTO[]): number[] {
     visited.add(current);
     path.push(current);
     const dto = ufNodes.find(n => n.id === current);
-    if (!dto || dto.parent === current || dto.parent === -1) break;
+    if (!dto || dto.parent === current) break;
     current = dto.parent;
   }
   return path;
@@ -204,6 +204,11 @@ function UFBuilderPage() {
 
     try {
       const preUnionNodes = ufNodes.map(n => ({ ...n }));
+
+      if (!preUnionNodes.find(n => n.id === start.id))
+        preUnionNodes.push({ id: start.id, parent: start.id });
+      if (!preUnionNodes.find(n => n.id === node.id))
+        preUnionNodes.push({ id: node.id, parent: node.id });
 
       const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(start.id, node.id);
       setUfNodes(updatedNodes);
