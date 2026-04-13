@@ -11,7 +11,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Tree } from '../components/Tree';
 import "./UFBuilderPage.css";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RedoIcon from '@mui/icons-material/Redo';
 
@@ -139,10 +139,9 @@ function UFBuilderPage() {
 
     // returns flat node list and feeds it into ufNodes
     const { edgeId, nodes: updatedNodes } = await res.json();
-    return { edgeId, updatedNodes }
     setUfNodes(updatedNodes);
     setDisplayNodes(normalize(updatedNodes));
-    return edgeId;
+    return { edgeId, updatedNodes }
   };
 
   const deleteEdgeInDb = async (edgeId: number) => {
@@ -457,6 +456,40 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
           <Tree nodes={ufNodes} background={treeBg} />
         </div>
       </div>
+               {/* === parent array below both === */}
+        <div style={{ marginTop: 24 }}>
+          <h3 style={{ marginBottom: 8, fontSize: 14, color: "#555" }}>Parent array</h3>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ borderCollapse: "collapse" }}>
+              <tbody>
+                {/* Row 1: node indices */}
+                <tr>
+                  {displayNodes.map(({ id }) => (
+                    <td key={id} style={{ textAlign: "center", padding: "4px 6px", fontSize: 12, color: "#888", borderBottom: "0.5px solid #ccc" }}>
+                      {id}
+                    </td>
+                  ))}
+                </tr>
+                {/* Row 2: parent values */}
+                <tr>
+                  {displayNodes.map(({ id, parent }) => (
+                    <td key={id} style={{
+                      textAlign: "center",
+                      padding: "4px 6px",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      background: parent === id ? "#f5f5f5" : "#b5d4f4",
+                      color: parent === id ? "#333" : "#042c53",
+                      border: "0.5px solid #ccc"
+                    }}>
+                      {parent}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       </div>
     </ModeContext.Provider>
