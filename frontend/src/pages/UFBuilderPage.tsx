@@ -137,10 +137,8 @@ function UFBuilderPage() {
       throw new Error(msg);
     }
 
-    // returns flat node list and feeds it into ufNodes
+    // returns flat node list 
     const { edgeId, nodes: updatedNodes } = await res.json();
-    setUfNodes(updatedNodes);
-    setDisplayNodes(normalize(updatedNodes));
     return { edgeId, updatedNodes }
   };
 
@@ -227,8 +225,7 @@ function UFBuilderPage() {
         preUnionNodes.push({ id: node.id, parent: node.id });
 
       const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(start.id, node.id);
-      setUfNodes(updatedNodes);
-
+      
       setEdges(prev => [...prev, { id: dbEdgeId, startNode: start, endNode: node }]);
       setRedoStack([]);
 
@@ -281,7 +278,6 @@ function UFBuilderPage() {
     try {
       const preUnionNodes = [...ufNodes];
       const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(latest.startNode.id, latest.endNode.id);
-      setUfNodes(updatedNodes);
       setEdges(prev => [...prev, { ...latest, id: dbEdgeId }]);
       setRedoStack(prev => prev.slice(0, -1));
       animateFindThenUnion(latest.startNode.id, latest.endNode.id, preUnionNodes, updatedNodes);
@@ -295,44 +291,45 @@ function UFBuilderPage() {
   endId: number,
   preUnionNodes: NodeDTO[],
   updatedNodes: NodeDTO[]
-  ) => {
-    const pathA = getPathToRoot(startId, preUnionNodes);
-    const pathB = getPathToRoot(endId, preUnionNodes);
+) => {
+  const pathA = getPathToRoot(startId, preUnionNodes);
+  const pathB = getPathToRoot(endId, preUnionNodes);
 
-    const nodeIds = new Set([...pathA, ...pathB]);
+  const nodeIds = new Set([...pathA, ...pathB]);
 
-    // encode each parent->child pair as "parentId-childId" for easy lookup in Tree
-    const edgePairs = new Set<string>();
-    for (const path of [pathA, pathB]) {
-      for (let i = 0; i < path.length - 1; i++) {
-        edgePairs.add(`${path[i]}-${path[i + 1]}`);
-      }
+  if (pathA.length === 1 && pathB.length === 1) {
+    nodeIds.add(startId);
+    nodeIds.add(endId);
+  }  
+
+  const edgePairs = new Set<string>();
+  for (const path of [pathA, pathB]) {
+    for (let i = 0; i < path.length - 1; i++) {
+      edgePairs.add(`${path[i]}-${path[i + 1]}`);
     }
+  }
 
-    console.log("pathA:", pathA);
-    console.log("pathB:", pathB);
-    console.log("edgePairs:", [...edgePairs]);
+  // Find phase: highlight find paths on the pre-union tree
+  setFindNodeIds(nodeIds);
+  setFindEdgePairs(edgePairs);
+  setUnionChildId(null);
 
-    setFindNodeIds(nodeIds);
-    setFindEdgePairs(edgePairs);
-    setUnionChildId(null);
+  // Union phase: clear find highlight, swap tree to post-union shape, show union edge
+  setTimeout(() => {
+    setFindNodeIds(new Set());
+    setFindEdgePairs(new Set());
 
-    setTimeout(() => {
-      setFindNodeIds(new Set());
-      setFindEdgePairs(new Set());
+    setUfNodes(updatedNodes);
+    setDisplayNodes(normalize(updatedNodes));
 
-      console.log("pre:", preUnionNodes);
+    const changedNode = updatedNodes.find(post => {
+      const pre = preUnionNodes.find(n => n.id === post.id);
+      return pre && pre.parent !== post.parent;
+    });
 
-      // find whichever node actually changed its parent — that's the real union child
-      const changedNode = updatedNodes.find(post => {
-        const pre = preUnionNodes.find(n => n.id === post.id);
-        return pre && pre.parent !== post.parent;
-      });
-
-      console.log("changedNode:", changedNode);
-      setUnionChildId(changedNode?.id ?? null);
-    }, 1000);
-  };
+    setUnionChildId(changedNode?.id ?? null);
+  }, 1000);
+};
 
   const headerMap: Record<string, string> = {
   UF: "Basic Union-Find",
