@@ -243,6 +243,22 @@ function UFBuilderPage() {
     window.location.reload();
   }
 
+  // Derive which node IDs are actually in use (appear in any edge)
+  const activeNodeIds = useMemo(() => {
+    const ids = new Set<number>();
+    edges.forEach(e => {
+      ids.add(e.startNode.id);
+      ids.add(e.endNode.id);
+    });
+    return ids;
+  }, [edges]);
+
+  // Filter ufNodes to only those involved in edges
+  const visibleUfNodes = useMemo(() =>
+    ufNodes.filter(n => activeNodeIds.has(n.id)),
+    [ufNodes, activeNodeIds]
+  );
+
   const removeLatestEdge = async () => {
     if (edges.length === 0) return;
     setUnionChildId(null);
@@ -453,7 +469,7 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         >
           <h2 style={{ marginTop: 0, marginBottom: 8, color: "rgba(0, 0, 0, 0.54)" }}>Union-Find Trees</h2>
 
-          <Tree nodes={ufNodes} background={treeBg} findNodeIds={findNodeIds}
+          <Tree nodes={visibleUfNodes} background={treeBg} findNodeIds={findNodeIds}
             findEdgePairs={findEdgePairs}
             unionChildId={unionChildId} />
         </div>
