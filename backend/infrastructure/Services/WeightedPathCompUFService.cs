@@ -2,11 +2,11 @@ using backend.infrastructure.Entities;
 using backend.infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-public class PathCompressionUFService : IUnionFindService
+public class WeightedPathCompUFService : IUnionFindService
 {
     private readonly DBContext _db;
 
-    public PathCompressionUFService(DBContext db)
+    public WeightedPathCompUFService(DBContext db)
     {
         _db = db;
     }
