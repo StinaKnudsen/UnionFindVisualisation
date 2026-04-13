@@ -459,39 +459,44 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         </div>
       </div>
                {/* === parent array below both === */}
-        <div style={{ marginTop: 24 }}>
-          <h3 style={{ marginBottom: 8, fontSize: 14, color: "#555" }}>Parent array</h3>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ borderCollapse: "collapse" }}>
-              <tbody>
-                {/* Row 1: node indices */}
-                <tr>
-                  {displayNodes.map(({ id }) => (
-                    <td key={id} style={{ textAlign: "center", padding: "4px 6px", fontSize: 12, color: "#888", borderBottom: "0.5px solid #ccc" }}>
-                      {id}
-                    </td>
-                  ))}
-                </tr>
-                {/* Row 2: parent values */}
-                <tr>
-                  {displayNodes.map(({ id, parent }) => (
-                    <td key={id} style={{
-                      textAlign: "center",
-                      padding: "4px 6px",
-                      fontSize: 12,
-                      fontWeight: 500,
-                      background: parent === id ? "#f5f5f5" : "#b5d4f4",
-                      color: parent === id ? "#333" : "#042c53",
-                      border: "0.5px solid #ccc"
-                    }}>
-                      {parent}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+                <div style={{ padding: "0 24px 24px 24px", marginTop: 16 }}>
+                  <h3 style={{ marginBottom: 8, fontSize: 14, color: "#555" }}>Parent Array</h3>
+                  <div style={{ overflowX: "hidden", width: "100%" }}>
+                    <table style={{ borderCollapse: "collapse", width: "100%", tableLayout: "fixed" }}>
+                      <tbody>
+                        <tr>
+                          {displayNodes.map(({ id }) => (
+                            <td key={id} style={{
+                              textAlign: "center",
+                              padding: "4px 3px",
+                              fontSize: 11,
+                              fontWeight: 600,
+                              color: "#111",
+                              borderBottom: "2px solid #c0392b",
+                              minWidth: 0,
+                            }}>
+                              {id}
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          {displayNodes.map(({ id, parent }) => (
+                            <td key={id} style={{
+                              textAlign: "center",
+                              padding: "4px 3px",
+                              fontSize: 11,
+                              fontWeight: parent !== id ? 700 : 400,
+                              color: parent !== id ? "#c0392b" : "#aaa",
+                              minWidth: 0,
+                            }}>
+                              {parent}
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
       </div>
       </div>
     </ModeContext.Provider>
