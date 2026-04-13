@@ -11,7 +11,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Tree } from '../components/Tree';
 import "./UFBuilderPage.css";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import RedoIcon from '@mui/icons-material/Redo';
 
@@ -90,7 +90,15 @@ function UFBuilderPage() {
     }))
   );
 
-  const [ufNodes, setUfNodes] = useState<NodeDTO[]>([]);
+  const [ufNodes, setUfNodes] = useState<NodeDTO[]>([]); // raw, for Tree
+  const normalize = (data: NodeDTO[]): NodeDTO[] =>
+    Array.from({ length: 49 }, (_, i) => {
+      const found = data.find(n => n.id === i);
+      return { id: i, parent: found ? (found.parent === -1 ? i : found.parent) : i };
+    });
+  const [displayNodes, setDisplayNodes] = useState<NodeDTO[]>(
+    Array.from({ length: 49 }, (_, i) => ({ id: i, parent: i }))
+  ); // normalized, for parent array
   const [edges, setEdges] = useState<GraphEdge[]>([]);
   const [sourceNodeId, setSourceNodeId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -108,7 +116,12 @@ function UFBuilderPage() {
   useEffect(() => {
     fetch(`${BASE}/${UFType}/nodes`)
       .then(r => r.json())
-      .then(setUfNodes)
+      .then((data: NodeDTO[]) => {
+        if (data && data.length > 0) {
+          setUfNodes(data);
+          setDisplayNodes(normalize(data));
+        }
+      })
       .catch(err => console.error("Failed to fetch nodes:", err));
   }, [UFType]);
 
@@ -126,6 +139,8 @@ function UFBuilderPage() {
 
     // returns flat node list and feeds it into ufNodes
     const { edgeId, nodes: updatedNodes } = await res.json();
+    setUfNodes(updatedNodes);
+    setDisplayNodes(normalize(updatedNodes));
     return { edgeId, updatedNodes }
   };
 
@@ -141,6 +156,7 @@ function UFBuilderPage() {
 
     const updatedNodes = await res.json();
     setUfNodes(updatedNodes);
+    setDisplayNodes(normalize(updatedNodes));
   };
 
   const clearDb = async () => {
@@ -390,9 +406,14 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         <AutoAwesomeIcon sx={{ color: "gold" }} />
       </IconButton>
 
-      <IconButton onClick={removeLatestEdge} disabled={mode === "delete"}>
+      <div>
+      <IconButton onClick={removeLatestEdge} disabled={edges.length === 0}>
         <UndoIcon />
       </IconButton>
+      <IconButton onClick={redoLatestEdge} disabled={redoStack.length === 0}>
+        <RedoIcon />
+      </IconButton>
+      </div>
     </div>
 
     {showDismissible && (
@@ -406,7 +427,6 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
             <Edge
               key={e.id}
               edge={e}
-              onClick={removeLatestEdge}
               theme={currentNodeTheme}
             />
           ))}
@@ -433,14 +453,50 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         >
           <h2 style={{ marginTop: 0, marginBottom: 8, color: "rgba(0, 0, 0, 0.54)" }}>Union-Find Trees</h2>
 
-          <Tree 
-            nodes={ufNodes} 
-            background={treeBg}
-            findNodeIds={findNodeIds}
+          <Tree nodes={ufNodes} background={treeBg} findNodeIds={findNodeIds}
             findEdgePairs={findEdgePairs}
             unionChildId={unionChildId} />
         </div>
       </div>
+               {/* === parent array below both === */}
+                <div style={{ padding: "0 24px 24px 24px", marginTop: 16 }}>
+                  <h3 style={{ marginBottom: 8, fontSize: 14, color: "#555" }}>Parent Array</h3>
+                  <div style={{ overflowX: "hidden", width: "100%" }}>
+                    <table style={{ borderCollapse: "collapse", width: "100%", tableLayout: "fixed" }}>
+                      <tbody>
+                        <tr>
+                          {displayNodes.map(({ id }) => (
+                            <td key={id} style={{
+                              textAlign: "center",
+                              padding: "4px 3px",
+                              fontSize: 11,
+                              fontWeight: 600,
+                              color: "#111",
+                              borderBottom: "2px solid #c0392b",
+                              minWidth: 0,
+                            }}>
+                              {id}
+                            </td>
+                          ))}
+                        </tr>
+                        <tr>
+                          {displayNodes.map(({ id, parent }) => (
+                            <td key={id} style={{
+                              textAlign: "center",
+                              padding: "4px 3px",
+                              fontSize: 11,
+                              fontWeight: parent !== id ? 700 : 400,
+                              color: parent !== id ? "#c0392b" : "#aaa",
+                              minWidth: 0,
+                            }}>
+                              {parent}
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
       </div>
       </div>
     </ModeContext.Provider>
