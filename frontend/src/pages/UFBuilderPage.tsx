@@ -112,6 +112,7 @@ function UFBuilderPage() {
   const [findNodeIds, setFindNodeIds] = useState<Set<number>>(new Set());
   const [findEdgePairs, setFindEdgePairs] = useState<Set<string>>(new Set());
   const [unionChildId, setUnionChildId] = useState<number | null>(null);
+  const [previewNodeIds, setPreviewNodeIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     fetch(`${BASE}/${UFType}/nodes`)
@@ -251,10 +252,14 @@ function UFBuilderPage() {
   }, [edges]);
 
   // Filter ufNodes to only those involved in edges
-  const visibleUfNodes = useMemo(() =>
-    ufNodes.filter(n => activeNodeIds.has(n.id)),
-    [ufNodes, activeNodeIds]
-  );
+  const visibleUfNodes = useMemo(() => {
+    const ids = new Set([...activeNodeIds, ...previewNodeIds]);
+
+    return Array.from(ids).map(id => {
+      const found = ufNodes.find(n => n.id === id);
+      return found ?? { id, parent: id };
+    });
+  }, [ufNodes, activeNodeIds, previewNodeIds]);
 
   const removeLatestEdge = async () => {
     if (edges.length === 0) return;
@@ -287,51 +292,49 @@ function UFBuilderPage() {
   };
 
   const animateFindThenUnion = (
-  startId: number,
-  endId: number,
-  preUnionNodes: NodeDTO[],
-  updatedNodes: NodeDTO[]
-) => {
-  const pathA = getPathToRoot(startId, preUnionNodes);
-  const pathB = getPathToRoot(endId, preUnionNodes);
+    startId: number,
+    endId: number,
+    preUnionNodes: NodeDTO[],
+    updatedNodes: NodeDTO[]
+  ) => {
+    const pathA = getPathToRoot(startId, preUnionNodes);
+    const pathB = getPathToRoot(endId, preUnionNodes);
 
-  const nodeIds = new Set([...pathA, ...pathB]);
+    const nodeIds = new Set([...pathA, ...pathB]);
 
-  if (pathA.length === 1 && pathB.length === 1) {
-    nodeIds.add(startId);
-    nodeIds.add(endId);
-  }  
-
-  const edgePairs = new Set<string>();
-  for (const path of [pathA, pathB]) {
-    for (let i = 0; i < path.length - 1; i++) {
-      edgePairs.add(`${path[i]}-${path[i + 1]}`);
+    const edgePairs = new Set<string>();
+    for (const path of [pathA, pathB]) {
+      for (let i = 0; i < path.length - 1; i++) {
+        edgePairs.add(`${path[i]}-${path[i + 1]}`);
+      }
     }
-  }
 
-  // Find phase: highlight find paths on the pre-union tree
-  setFindNodeIds(nodeIds);
-  setFindEdgePairs(edgePairs);
-  setUnionChildId(null);
+    setPreviewNodeIds(new Set([startId, endId]));
 
-  // Union phase: clear find highlight, swap tree to post-union shape, show union edge
-  setTimeout(() => {
-    setFindNodeIds(new Set());
-    setFindEdgePairs(new Set());
+    // Find phase
+    setFindNodeIds(nodeIds);
+    setFindEdgePairs(edgePairs);
+    setUnionChildId(null);
 
-    setUfNodes(updatedNodes);
-    setDisplayNodes(normalize(updatedNodes));
+    setTimeout(() => {
+      setFindNodeIds(new Set());
+      setFindEdgePairs(new Set());
 
-    const changedNode = updatedNodes.find(post => {
-      const pre = preUnionNodes.find(n => n.id === post.id);
-      return pre && pre.parent !== post.parent;
-    });
+      setUfNodes(updatedNodes);
+      setDisplayNodes(normalize(updatedNodes));
 
-    setUnionChildId(changedNode?.id ?? null);
-  }, 1000);
-};
+      setPreviewNodeIds(new Set());
 
-  const headerMap: Record<string, string> = {
+      const changedNode = updatedNodes.find(post => {
+        const pre = preUnionNodes.find(n => n.id === post.id);
+        return pre && pre.parent !== post.parent;
+      });
+
+      setUnionChildId(changedNode?.id ?? null);
+    }, 1000);
+  };
+
+const headerMap: Record<string, string> = {
   UF: "Basic Union-Find",
   WUF: "Weighted Union-Find",
   PCUF: "Weighted Union-Find with Path Compression",
