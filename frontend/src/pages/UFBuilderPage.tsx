@@ -453,7 +453,9 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
         >
           <h2 style={{ marginTop: 0, marginBottom: 8, color: "rgba(0, 0, 0, 0.54)" }}>Union-Find Trees</h2>
 
-          <Tree nodes={ufNodes} background={treeBg} />
+          <Tree nodes={ufNodes} background={treeBg} findNodeIds={findNodeIds}
+            findEdgePairs={findEdgePairs}
+            unionChildId={unionChildId} />
         </div>
       </div>
                {/* === parent array below both === */}
