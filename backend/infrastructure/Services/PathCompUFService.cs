@@ -47,16 +47,7 @@ public class PathCompUFService : IUnionFindService
 
         if (rootA == rootB) return false;
 
-        if (nodes[rootA].Size < nodes[rootB].Size)
-        {
-            nodes[rootA].Parent = rootB;
-            nodes[rootB].Size += nodes[rootA].Size;
-        }
-        else
-        {
-            nodes[rootB].Parent = rootA;
-            nodes[rootA].Size += nodes[rootB].Size;
-        }
+        nodes[rootA].Parent = rootB;
 
         await _db.SaveChangesAsync();
         return true;
@@ -79,7 +70,6 @@ public class PathCompUFService : IUnionFindService
         foreach (var node in allNodes)
         {
             node.Parent = node.Id;
-            node.Size = 1;
         }
         await _db.SaveChangesAsync();
 
@@ -93,19 +83,9 @@ public class PathCompUFService : IUnionFindService
 
             if (rootA == rootB) continue;
 
-            if (nodes[rootA].Size < nodes[rootB].Size)
-            {
-                nodes[rootA].Parent = rootB;
-                nodes[rootB].Size += nodes[rootA].Size;
-            }
-            else
-            {
-                nodes[rootB].Parent = rootA;
-                nodes[rootA].Size += nodes[rootB].Size;
-            }
+            nodes[rootA].Parent = rootB;
         }
 
         await _db.SaveChangesAsync();
     }
-
 }
