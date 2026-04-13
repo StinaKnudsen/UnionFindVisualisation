@@ -10,6 +10,9 @@
   --uf-green: #20916b;
   --uf-green-soft: #dcefe8;
 
+  --uf-orange: #d66713;
+  --uf-orange-soft: #f1d4bf;
+
   --uf-blue: #2c79e8;
   --uf-blue-soft: #dfeafc;
 
@@ -83,13 +86,13 @@ body {
   position: relative;
   z-index: 1;
   width: min(100%, 900px);
-  margin: 0 auto 56px;
+  margin: 0 auto 30px;
   text-align: center;
 }
 
 .uf-hero__title {
   margin: 0;
-  font-size: clamp(2.7rem, 5vw, 4.25rem);
+  font-size: clamp(2.25rem, 3vw, 4.25rem);
   line-height: 1.05;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -97,11 +100,11 @@ body {
 }
 
 .uf-hero__subtitle {
-  margin: 24px auto 0;
+  margin: 20px auto 0;
   max-width: 860px;
-  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  font-size: clamp(1.15rem, 1vw, 1.5rem);
   line-height: 1.6;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--uf-text-soft);
 }
 
@@ -109,9 +112,9 @@ body {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
   gap: 36px;
-  width: min(100%, 1240px);
+  width: min(75%, 1240px);
   margin: 0 auto;
 }
 
@@ -120,8 +123,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 420px;
-  padding: 0 30px 28px;
+  min-height: 150px;
+  padding: 0 20px 20px;
   border: 1px solid var(--uf-card-border);
   border-radius: 22px;
   overflow: hidden;
@@ -146,6 +149,10 @@ body {
   background: var(--uf-green);
 }
 
+.uf-card--orange .uf-card__top-line {
+  background: var(--uf-orange);
+}
+
 .uf-card--blue .uf-card__top-line {
   background: var(--uf-blue);
 }
@@ -157,14 +164,18 @@ body {
 .uf-card__icon-wrap {
   display: grid;
   place-items: center;
-  width: 120px;
-  height: 120px;
-  margin-top: 22px;
+  width: 50px;
+  height: 50px;
+  margin-top: 14px;
   border-radius: 50%;
 }
 
 .uf-card__icon-wrap--green {
   background: #dcefe8;
+}
+
+.uf-card__icon-wrap--orange {
+  background: #f1d4bf;
 }
 
 .uf-card__icon-wrap--blue {
@@ -176,8 +187,8 @@ body {
 }
 
 .uf-icon {
-  width: 70px;
-  height: 70px;
+  width: 35px;
+  height: 35px;
   fill: none;
   stroke-width: 3.6;
   stroke-linecap: round;
@@ -190,6 +201,10 @@ body {
 
 .uf-icon--tree circle {
   fill: #31a67d;
+}
+
+.uf-icon--tree circle {
+  fill: #df8f56;
 }
 
 .uf-icon--weight {
@@ -223,9 +238,9 @@ body {
 }
 
 .uf-card__title {
-  margin: 28px 0 10px;
+  margin: 10px 0 15px;
   text-align: center;
-  font-size: clamp(2rem, 2.2vw, 2.35rem);
+  font-size: clamp(1.2rem, 1.6vw, 1.6rem);
   line-height: 1.18;
   letter-spacing: -0.03em;
   font-weight: 800;
@@ -242,12 +257,12 @@ body {
 }
 
 .uf-card__badge {
-  margin-top: 22px;
+  margin: 10px 0 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 42px;
-  padding: 0 18px;
+  padding: 0 10px;
   border-radius: 999px;
   font-size: 0.95rem;
   font-weight: 700;
@@ -257,6 +272,11 @@ body {
 .uf-card__badge--green {
   color: #2c6554;
   background: var(--uf-green-soft);
+}
+
+.uf-card__badge--orange {
+  color: #d66713;
+  background: var(--uf-orange-soft);
 }
 
 .uf-card__badge--blue {
@@ -272,7 +292,7 @@ body {
 .uf-card__button {
   width: 100%;
   margin-top: auto;
-  min-height: 58px;
+  min-height: 44px;
   border-radius: 14px;
   font-size: 1rem;
   font-weight: 800;
@@ -294,6 +314,16 @@ body {
 .uf-card__button--green:hover {
   background: rgba(32, 145, 107, 0.08);
   border-color: var(--uf-green);
+}
+
+.uf-card__button--orange {
+  border: 2px solid var(--uf-orange);
+  color: var(--uf-orange);
+}
+
+.uf-card__button--orange:hover {
+  background: rgba(238, 140, 66, 0.08);
+  border-color: var(--uf-orange);
 }
 
 .uf-card__button--blue {

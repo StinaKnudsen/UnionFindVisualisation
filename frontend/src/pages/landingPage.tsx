@@ -2,12 +2,13 @@ import React from "react";
 import "./landingPage.css";
 import Scale from "../icons/scale.png";
 import Tree from "../icons/tree.png";
-import Lightning from "../icons/lightning.png"
+import Lightning from "../icons/lightning.png";
+import Shortcut from "../icons/shortcut.png";
 import { useNavigate } from "react-router-dom";
 
 
 
-type CardColor = "green" | "blue" | "purple";
+type CardColor = "green" | "orange" | "blue" | "purple";
 
 type UnionCardProps = {
   title: string;
@@ -80,6 +81,15 @@ export default function UnionFindLanding() {
         />
 
         <UnionCard
+          title="Union-Find w. Path Compression"
+          description="How is this a thing?."
+          badgeText="Why is this here"
+          color="orange"
+          icon={<img src={Shortcut} className="uf-icon" />}
+          onClick={() => navigate("/builder/PCUF")}
+        />
+
+        <UnionCard
           title="Weighted Union-Find"
           description="See how balancing keeps trees shallow."
           badgeText="Improves performance"
@@ -89,12 +99,12 @@ export default function UnionFindLanding() {
         />
 
         <UnionCard
-          title="Path Compression"
+          title="Weighted Union-Find w. Path Compression"
           description="The fastest version for find operations."
           badgeText="Maximum speed"
           color="purple"
           icon={<img src={Lightning} className="uf-icon" />}
-          onClick={() => navigate("/builder/PCUF")}
+          onClick={() => navigate("/builder/WPCUF")}
         />
       </section>
     </main>

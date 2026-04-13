@@ -337,13 +337,15 @@ function UFBuilderPage() {
   const headerMap: Record<string, string> = {
   UF: "Basic Union-Find",
   WUF: "Weighted Union-Find",
-  PCUF: "Weighted Union-Find with Path Compression",
+  WPCUF: "Weighted Union-Find with Path Compression",
+  PCUF: "Union-Find with Path Compression"
 };
 
 const treeBackgroundMap: Record<string, string> = {
   UF: "#f6fff6",
   WUF: "#f0faff",
-  PCUF: "#f5f4ff",
+  WPCUF: "#f5f4ff",
+  PCUF: "#fff4ea"
 };
 
 const colorScheme: Record<string, colorTheme> = {
@@ -363,7 +365,7 @@ const colorScheme: Record<string, colorTheme> = {
     defaultFill: "#ffffff",
     edgeStroke: "#1e6fff",
   },
-  PCUF: {
+  WPCUF: {
     selectedFill: "#d7b3ff",
     selectedStroke: "#7b3fc9",
     adjacentStroke: "#a259ff",
@@ -371,6 +373,14 @@ const colorScheme: Record<string, colorTheme> = {
     defaultFill: "#ffffff",
     edgeStroke: "#8e44ad",
   },
+  PCUF: {
+    selectedFill: "#ffd4a8",
+    selectedStroke: "#b8540e",
+    adjacentStroke: "#e87a2e",
+    defaultStroke: "#a08070",
+    defaultFill: "#ffffff",
+    edgeStroke: "#d66713",
+  }
 };
 
 const pageTitle = headerMap[UFType] ?? "Union-Find";

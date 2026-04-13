@@ -30,7 +30,8 @@ builder.Services.AddScoped<INodeEdgeRepository, NodeEdgeRepository>();
 builder.Services.AddScoped<NodeEdgeService>();
 builder.Services.AddScoped<UnionFindService>();
 builder.Services.AddScoped<WeightedUFService>();
-builder.Services.AddScoped<PathCompressionUFService>();
+builder.Services.AddScoped<WeightedPathCompUFService>();
+builder.Services.AddScoped<PathCompUFService>();
 
 var app = builder.Build();
 
@@ -50,7 +51,8 @@ IUnionFindService DetermineUF(string ufType, IServiceProvider sp) => ufType.ToUp
     "UF"    => sp.GetRequiredService<UnionFindService>(),
     "WUF"   => sp.GetRequiredService<WeightedUFService>(),
     // add path compression here
-    "PCUF" => sp.GetRequiredService<PathCompressionUFService>(),
+    "WPCUF" => sp.GetRequiredService<WeightedPathCompUFService>(),
+    "PCUF"   => sp.GetRequiredService<PathCompUFService>(),
     _       => throw new ArgumentException($"Unknown algorithm: {ufType}")
 };
 
