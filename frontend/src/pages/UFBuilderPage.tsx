@@ -112,6 +112,7 @@ function UFBuilderPage() {
   const [findNodeIds, setFindNodeIds] = useState<Set<number>>(new Set());
   const [findEdgePairs, setFindEdgePairs] = useState<Set<string>>(new Set());
   const [unionChildId, setUnionChildId] = useState<number | null>(null);
+  const [previewNodeIds, setPreviewNodeIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     fetch(`${BASE}/${UFType}/nodes`)
@@ -137,10 +138,8 @@ function UFBuilderPage() {
       throw new Error(msg);
     }
 
-    // returns flat node list and feeds it into ufNodes
+    // returns flat node list 
     const { edgeId, nodes: updatedNodes } = await res.json();
-    setUfNodes(updatedNodes);
-    setDisplayNodes(normalize(updatedNodes));
     return { edgeId, updatedNodes }
   };
 
@@ -227,8 +226,7 @@ function UFBuilderPage() {
         preUnionNodes.push({ id: node.id, parent: node.id });
 
       const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(start.id, node.id);
-      setUfNodes(updatedNodes);
-
+      
       setEdges(prev => [...prev, { id: dbEdgeId, startNode: start, endNode: node }]);
       setRedoStack([]);
 
@@ -254,10 +252,14 @@ function UFBuilderPage() {
   }, [edges]);
 
   // Filter ufNodes to only those involved in edges
-  const visibleUfNodes = useMemo(() =>
-    ufNodes.filter(n => activeNodeIds.has(n.id)),
-    [ufNodes, activeNodeIds]
-  );
+  const visibleUfNodes = useMemo(() => {
+    const ids = new Set([...activeNodeIds, ...previewNodeIds]);
+
+    return Array.from(ids).map(id => {
+      const found = ufNodes.find(n => n.id === id);
+      return found ?? { id, parent: id };
+    });
+  }, [ufNodes, activeNodeIds, previewNodeIds]);
 
   const removeLatestEdge = async () => {
     if (edges.length === 0) return;
@@ -281,7 +283,6 @@ function UFBuilderPage() {
     try {
       const preUnionNodes = [...ufNodes];
       const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(latest.startNode.id, latest.endNode.id);
-      setUfNodes(updatedNodes);
       setEdges(prev => [...prev, { ...latest, id: dbEdgeId }]);
       setRedoStack(prev => prev.slice(0, -1));
       animateFindThenUnion(latest.startNode.id, latest.endNode.id, preUnionNodes, updatedNodes);
@@ -291,17 +292,16 @@ function UFBuilderPage() {
   };
 
   const animateFindThenUnion = (
-  startId: number,
-  endId: number,
-  preUnionNodes: NodeDTO[],
-  updatedNodes: NodeDTO[]
+    startId: number,
+    endId: number,
+    preUnionNodes: NodeDTO[],
+    updatedNodes: NodeDTO[]
   ) => {
     const pathA = getPathToRoot(startId, preUnionNodes);
     const pathB = getPathToRoot(endId, preUnionNodes);
 
     const nodeIds = new Set([...pathA, ...pathB]);
 
-    // encode each parent->child pair as "parentId-childId" for easy lookup in Tree
     const edgePairs = new Set<string>();
     for (const path of [pathA, pathB]) {
       for (let i = 0; i < path.length - 1; i++) {
@@ -309,10 +309,9 @@ function UFBuilderPage() {
       }
     }
 
-    console.log("pathA:", pathA);
-    console.log("pathB:", pathB);
-    console.log("edgePairs:", [...edgePairs]);
+    setPreviewNodeIds(new Set([startId, endId]));
 
+    // Find phase
     setFindNodeIds(nodeIds);
     setFindEdgePairs(edgePairs);
     setUnionChildId(null);
@@ -321,20 +320,21 @@ function UFBuilderPage() {
       setFindNodeIds(new Set());
       setFindEdgePairs(new Set());
 
-      console.log("pre:", preUnionNodes);
+      setUfNodes(updatedNodes);
+      setDisplayNodes(normalize(updatedNodes));
 
-      // find whichever node actually changed its parent — that's the real union child
+      setPreviewNodeIds(new Set());
+
       const changedNode = updatedNodes.find(post => {
         const pre = preUnionNodes.find(n => n.id === post.id);
         return pre && pre.parent !== post.parent;
       });
 
-      console.log("changedNode:", changedNode);
       setUnionChildId(changedNode?.id ?? null);
     }, 1000);
   };
 
-  const headerMap: Record<string, string> = {
+const headerMap: Record<string, string> = {
   UF: "Basic Union-Find",
   WUF: "Weighted Union-Find",
   WPCUF: "Weighted Union-Find with Path Compression",
