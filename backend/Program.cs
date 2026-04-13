@@ -67,7 +67,7 @@ app.MapPost("/api/{ufType}/edges", async (string ufType, EdgeDTO edge, DBContext
     var startNode = await dbContext.Nodes.FindAsync(edge.StartNodeId);
     if (startNode == null)
     {
-        startNode = new Node { Id = edge.StartNodeId, Parent = -1 };
+        startNode = new Node { Id = edge.StartNodeId, Parent = edge.StartNodeId };
         dbContext.Nodes.Add(startNode);
         await dbContext.SaveChangesAsync();
     }
@@ -75,7 +75,7 @@ app.MapPost("/api/{ufType}/edges", async (string ufType, EdgeDTO edge, DBContext
     var endNode = await dbContext.Nodes.FindAsync(edge.EndNodeId);
     if (endNode == null)
     {
-        endNode = new Node { Id = edge.EndNodeId, Parent = -1 };
+        endNode = new Node { Id = edge.EndNodeId, Parent = edge.EndNodeId };
         dbContext.Nodes.Add(endNode);
         await dbContext.SaveChangesAsync();
     }

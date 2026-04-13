@@ -9,13 +9,13 @@ public class UnionFindService : IUnionFindService
         _db = db;
     }
 
-    // Find - walk up parents until we hit a root (Parent == -1)
+    // Find - walk up parents until we hit a root (Parent == Id)
     public async Task<int> FindAsync(int nodeId)
     {
         var node = await _db.Nodes.FindAsync(nodeId)
             ?? throw new Exception($"Node {nodeId} not found");
 
-        if (node.Parent == -1) return node.Id;
+        if (node.Parent == node.Id) return node.Id;
 
         return await FindAsync(node.Parent);
     }
@@ -41,7 +41,7 @@ public class UnionFindService : IUnionFindService
         var allNodes = _db.Nodes.ToList();
         foreach (var node in allNodes)
         {
-            node.Parent = -1;
+            node.Parent = node.Id;
         }
         await _db.SaveChangesAsync();
 

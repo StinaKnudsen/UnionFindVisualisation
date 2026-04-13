@@ -12,7 +12,7 @@ public class WeightedUFService : IUnionFindService
         _db = db;
     }
 
-    // Find - walk up parents until we hit a root (Parent == -1)
+    // Find - walk up parents until we hit a root (Parent == Id)
     // Weighted so should be O(log N)
     private int FindRoot(int nodeId, Dictionary<int, Node> nodes)
     {
@@ -21,8 +21,8 @@ public class WeightedUFService : IUnionFindService
 
         int current = nodeId;
 
-        // Walk up to root — root is the node where Parent == -1
-        while (nodes[current].Parent != -1)
+        // Walk up to root — root is the node where Parent == Id
+        while (nodes[current].Parent != current)
             current = nodes[current].Parent;
 
         return current;
@@ -76,7 +76,7 @@ public class WeightedUFService : IUnionFindService
     // Count of distinct components (nodes that are their own root)
     public async Task<int> CountAsync()
     {
-        return await _db.Nodes.CountAsync(n => n.Parent == -1);
+        return await _db.Nodes.CountAsync(n => n.Parent == n.Id);
     }
 
     public async Task RebuildAsync()
@@ -85,7 +85,7 @@ public class WeightedUFService : IUnionFindService
         var allNodes = await _db.Nodes.ToListAsync();
         foreach (var node in allNodes)
         {
-            node.Parent = -1;
+            node.Parent = node.Id;
             node.Size = 1;
         }
         await _db.SaveChangesAsync();

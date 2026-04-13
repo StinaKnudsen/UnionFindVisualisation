@@ -49,10 +49,25 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     if (col < cols - 1) { adjacent.push({ node: nodes[row][col + 1]}); }
 
     for(var element of adjacent){
-      console.log("neighbour ids: " + element.node.id);
+      console.log("neighbor ids: " + element.node.id);
       console.log("node row: "+ element.node.row + " node col: " + element.node.col);
     }
     return adjacent;
+}
+
+function getPathToRoot(startId: number, ufNodes: NodeDTO[]): number[] {
+  const path: number[] = [];
+  let current = startId;
+  const visited = new Set<number>();
+  while (true) {
+    if (visited.has(current)) break;
+    visited.add(current);
+    path.push(current);
+    const dto = ufNodes.find(n => n.id === current);
+    if (!dto || dto.parent === current) break;
+    current = dto.parent;
+  }
+  return path;
 }
 
 function UFBuilderPage() {
@@ -94,6 +109,9 @@ function UFBuilderPage() {
     );
   const [showDismissible, setShowDismissible] = useState(false);
   const [redoStack, setRedoStack] = useState<GraphEdge[]>([]);
+  const [findNodeIds, setFindNodeIds] = useState<Set<number>>(new Set());
+  const [findEdgePairs, setFindEdgePairs] = useState<Set<string>>(new Set());
+  const [unionChildId, setUnionChildId] = useState<number | null>(null);
 
   useEffect(() => {
     fetch(`${BASE}/${UFType}/nodes`)
@@ -107,7 +125,7 @@ function UFBuilderPage() {
       .catch(err => console.error("Failed to fetch nodes:", err));
   }, [UFType]);
 
-  const createEdgeInDb = async (startNodeId: number, endNodeId: number): Promise<number> => {
+  const createEdgeInDb = async (startNodeId: number, endNodeId: number): Promise<{ edgeId: number; updatedNodes: NodeDTO[] }> => {
     const res = await fetch(`${BASE}/${UFType}/edges`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -121,6 +139,7 @@ function UFBuilderPage() {
 
     // returns flat node list and feeds it into ufNodes
     const { edgeId, nodes: updatedNodes } = await res.json();
+    return { edgeId, updatedNodes }
     setUfNodes(updatedNodes);
     setDisplayNodes(normalize(updatedNodes));
     return edgeId;
@@ -152,62 +171,73 @@ function UFBuilderPage() {
     }
   }
 
+
   const onNodeClick = async (node: GraphNode) => {
 
-  if (sourceNodeId === null && mode == "create") {
-    // First click -> select source
-    setSourceNodeId(node.id); //for setting edges
-    setSelectedId(node.id); //source node is ALWAYS highlighted with pink, for visibility
+    setUnionChildId(null);
 
-    /*
-    because the adjacent notes should be highlighted when rendering, it should be a constant.
-    The function call getAdjacentNodes(nodes, node.row, node.col) returns an array of objects, and .map(x => x.node)
-    converts each object into a node by looping through the returned array
-    */
-    setAdjacentNodes(getAdjacentNodes(nodes, node.row, node.col).map(x => x.node));
-    console.log("source node id is " +  node.id);
-    return;
-  }
+    if (sourceNodeId === null && mode === "create") {
+      setSourceNodeId(node.id);
+      setSelectedId(node.id);
 
-  if (sourceNodeId === node.id && mode == "create") {
-    // Clicking the same node twice -> reset
-    setSourceNodeId(null); //for setting edges
-    setSelectedId(null); //for visibility
-    setAdjacentNodes([]);
-    return;
-  }
+      const neighbors = getAdjacentNodes(nodes, node.row, node.col)
+        .map(x => x.node)
+        .filter(neighbor =>
+          !edges.some(
+            e =>
+              (e.startNode.id === node.id && e.endNode.id === neighbor.id) ||
+              (e.startNode.id === neighbor.id && e.endNode.id === node.id)
+          )
+        );
 
-  const flatNodes = nodes.flat();
+      setAdjacentNodes(neighbors);
+      return;
+    }
+  
+    if (sourceNodeId === node.id && mode == "create") {
+      // Clicking the same node twice -> reset
+      setSourceNodeId(null); //for setting edges
+      setSelectedId(null); //for visibility
+      setAdjacentNodes([]);
+      return;
+    }
 
-  const start = flatNodes.find(n => n.id === sourceNodeId);
+    const flatNodes = nodes.flat();
 
-  if (!start) return;
+    const start = flatNodes.find(n => n.id === sourceNodeId);
 
-  if (!adjacentIds.includes(node.id)) {
-    setShowDismissible(true);
+    if (!start) return;
+
+    if (!adjacentIds.includes(node.id)) {
+      setShowDismissible(true);
+      setSourceNodeId(null);
+      setAdjacentNodes([]);
+      return;
+    }
+
     setSourceNodeId(null);
+    setSelectedId(null);
     setAdjacentNodes([]);
-    return;
-  }
 
-  setSourceNodeId(null);
-  setSelectedId(null);
-  setAdjacentNodes([]);
+    try {
+      const preUnionNodes = ufNodes.map(n => ({ ...n }));
 
-  try {
-    const dbEdgeId = await createEdgeInDb(start.id, node.id);
-    setEdges((prev) => [
-      ...prev,
-      { 
-        id: dbEdgeId, 
-        startNode: start, 
-        endNode: node }
-    ]);
-    setRedoStack([]);  // clear redo stack on new edge
-  } catch (err) {
-    console.error("Failed to create edge in DB:", err);
-  }
-};
+      if (!preUnionNodes.find(n => n.id === start.id))
+        preUnionNodes.push({ id: start.id, parent: start.id });
+      if (!preUnionNodes.find(n => n.id === node.id))
+        preUnionNodes.push({ id: node.id, parent: node.id });
+
+      const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(start.id, node.id);
+      setUfNodes(updatedNodes);
+
+      setEdges(prev => [...prev, { id: dbEdgeId, startNode: start, endNode: node }]);
+      setRedoStack([]);
+
+      animateFindThenUnion(start.id, node.id, preUnionNodes, updatedNodes);
+    } catch (err) {
+      console.error("Failed to create edge in DB:", err);
+    }
+  };
 
   const onClickReset = () => {
     clearDb();
@@ -216,6 +246,9 @@ function UFBuilderPage() {
 
   const removeLatestEdge = async () => {
     if (edges.length === 0) return;
+    setUnionChildId(null);
+    setFindNodeIds(new Set());
+    setFindEdgePairs(new Set());
     const latest = edges[edges.length - 1];
     try {
       await deleteEdgeInDb(latest.id);
@@ -228,14 +261,62 @@ function UFBuilderPage() {
 
   const redoLatestEdge = async () => {
     if (redoStack.length === 0) return;
+    setUnionChildId(null);
     const latest = redoStack[redoStack.length - 1];
     try {
-      const dbEdgeId = await createEdgeInDb(latest.startNode.id, latest.endNode.id);
+      const preUnionNodes = [...ufNodes];
+      const { edgeId: dbEdgeId, updatedNodes } = await createEdgeInDb(latest.startNode.id, latest.endNode.id);
+      setUfNodes(updatedNodes);
       setEdges(prev => [...prev, { ...latest, id: dbEdgeId }]);
       setRedoStack(prev => prev.slice(0, -1));
+      animateFindThenUnion(latest.startNode.id, latest.endNode.id, preUnionNodes, updatedNodes);
     } catch (err) {
       console.error("Failed to redo edge:", err);
     }
+  };
+
+  const animateFindThenUnion = (
+  startId: number,
+  endId: number,
+  preUnionNodes: NodeDTO[],
+  updatedNodes: NodeDTO[]
+  ) => {
+    const pathA = getPathToRoot(startId, preUnionNodes);
+    const pathB = getPathToRoot(endId, preUnionNodes);
+
+    const nodeIds = new Set([...pathA, ...pathB]);
+
+    // encode each parent->child pair as "parentId-childId" for easy lookup in Tree
+    const edgePairs = new Set<string>();
+    for (const path of [pathA, pathB]) {
+      for (let i = 0; i < path.length - 1; i++) {
+        edgePairs.add(`${path[i]}-${path[i + 1]}`);
+      }
+    }
+
+    console.log("pathA:", pathA);
+    console.log("pathB:", pathB);
+    console.log("edgePairs:", [...edgePairs]);
+
+    setFindNodeIds(nodeIds);
+    setFindEdgePairs(edgePairs);
+    setUnionChildId(null);
+
+    setTimeout(() => {
+      setFindNodeIds(new Set());
+      setFindEdgePairs(new Set());
+
+      console.log("pre:", preUnionNodes);
+
+      // find whichever node actually changed its parent — that's the real union child
+      const changedNode = updatedNodes.find(post => {
+        const pre = preUnionNodes.find(n => n.id === post.id);
+        return pre && pre.parent !== post.parent;
+      });
+
+      console.log("changedNode:", changedNode);
+      setUnionChildId(changedNode?.id ?? null);
+    }, 1000);
   };
 
   const headerMap: Record<string, string> = {
@@ -296,7 +377,7 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
           }}
         >
           <IconButton
-            onClick={() => navigate("/")}
+            onClick={() => { clearDb(); navigate("/"); }}
             style={{
               position: "absolute",
               left: 0,
@@ -376,40 +457,6 @@ const treeBg = treeBackgroundMap[UFType] ?? "#ffffff";
           <Tree nodes={ufNodes} background={treeBg} />
         </div>
       </div>
-      {/* === parent array below both === */}
-        <div style={{ marginTop: 24 }}>
-          <h3 style={{ marginBottom: 8, fontSize: 14, color: "#555" }}>Parent array</h3>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ borderCollapse: "collapse" }}>
-              <tbody>
-                {/* Row 1: node indices */}
-                <tr>
-                  {displayNodes.map(({ id }) => (
-                    <td key={id} style={{ textAlign: "center", padding: "4px 6px", fontSize: 12, color: "#888", borderBottom: "0.5px solid #ccc" }}>
-                      {id}
-                    </td>
-                  ))}
-                </tr>
-                {/* Row 2: parent values */}
-                <tr>
-                  {displayNodes.map(({ id, parent }) => (
-                    <td key={id} style={{
-                      textAlign: "center",
-                      padding: "4px 6px",
-                      fontSize: 12,
-                      fontWeight: 500,
-                      background: parent === id ? "#f5f5f5" : "#b5d4f4",
-                      color: parent === id ? "#333" : "#042c53",
-                      border: "0.5px solid #ccc"
-                    }}>
-                      {parent}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
       </div>
     </ModeContext.Provider>
