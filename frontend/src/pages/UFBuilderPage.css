@@ -20,8 +20,13 @@
   min-height: 100vh;
 }
 
-.builder-page--PCUF {
+.builder-page--WPCUF {
   background-color: #f5f4ff;
+  min-height: 100vh;
+}
+
+.builder-page--PCUF {
+  background-color: #fff4ea;
   min-height: 100vh;
 }
 

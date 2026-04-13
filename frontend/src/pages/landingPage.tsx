@@ -86,7 +86,7 @@ export default function UnionFindLanding() {
           badgeText="Why is this here"
           color="orange"
           icon={<img src={Shortcut} className="uf-icon" />}
-          onClick={() => navigate("/builder/UF")}
+          onClick={() => navigate("/builder/PCUF")}
         />
 
         <UnionCard
@@ -104,7 +104,7 @@ export default function UnionFindLanding() {
           badgeText="Maximum speed"
           color="purple"
           icon={<img src={Lightning} className="uf-icon" />}
-          onClick={() => navigate("/builder/PCUF")}
+          onClick={() => navigate("/builder/WPCUF")}
         />
       </section>
     </main>
