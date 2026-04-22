@@ -9,6 +9,7 @@ namespace backend.infrastructure.Services;
 public interface INodeEdgeService
 {
     Task<Edge?> GetEdgeAsync(int EdgeId);
+    Task DeleteEdgeOnClick(int EdgeId);
 }
 
 public class NodeEdgeService : INodeEdgeService

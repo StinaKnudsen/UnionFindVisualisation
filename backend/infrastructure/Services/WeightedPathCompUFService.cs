@@ -29,15 +29,6 @@ public class WeightedPathCompUFService : IUnionFindService
         return root;
     }
 
-    public async Task<int> FindAsync(int nodeId)
-    {
-        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
-
-        // Persist the flattened parent pointers back to DB
-        await _db.SaveChangesAsync();
-        return FindRoot(nodeId, nodes);
-    }
-
     public async Task<bool> UnionAsync(int nodeAId, int nodeBId)
     {
         var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
@@ -60,12 +51,6 @@ public class WeightedPathCompUFService : IUnionFindService
 
         await _db.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<bool> ConnectedAsync(int nodeAId, int nodeBId)
-    {
-        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
-        return FindRoot(nodeAId, nodes) == FindRoot(nodeBId, nodes);
     }
 
     public async Task<int> CountAsync()

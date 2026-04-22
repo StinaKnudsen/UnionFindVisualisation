@@ -28,13 +28,6 @@ public class WeightedUFService : IUnionFindService
         return current;
     }
 
-    // Public async wrapper
-    public async Task<int> FindAsync(int nodeId)
-    {
-        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
-        return FindRoot(nodeId, nodes);
-    }
-
     // Weighted union — attach smaller tree under larger tree
     // Should be O(log N)
     public async Task<bool> UnionAsync(int nodeAId, int nodeBId)
@@ -65,20 +58,6 @@ public class WeightedUFService : IUnionFindService
         await _db.SaveChangesAsync();
         return true;
     }
-
-    // Check if two nodes are in the same component
-    public async Task<bool> ConnectedAsync(int nodeAId, int nodeBId)
-    {
-        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
-        return FindRoot(nodeAId, nodes) == FindRoot(nodeBId, nodes);
-    }
-
-    // Count of distinct components (nodes that are their own root)
-    public async Task<int> CountAsync()
-    {
-        return await _db.Nodes.CountAsync(n => n.Parent == n.Id);
-    }
-
     public async Task RebuildAsync()
     {
         // Reset all nodes to be their own root and size 1
