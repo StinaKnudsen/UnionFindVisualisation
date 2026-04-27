@@ -120,6 +120,81 @@ public class WeightedPathCompUFServiceTests : IDisposable
         refreshed!.Parent.Should().Be(1);
     }
 
+    // --- FindRoot throw ---
+
+    [Fact]
+    public async Task Union_NodeDoesNotExist_ThrowsException()
+    {
+        AddNodes(1);
+
+        var act = async () => await _sut.UnionAsync(999, 1);
+
+        await act.Should().ThrowAsync<Exception>().WithMessage("*999*");
+    }
+
+    // --- CountAsync ---
+
+    [Fact]
+    public async Task CountAsync_NoNodes_ReturnsZero()
+    {
+        var count = await _sut.CountAsync();
+
+        count.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task CountAsync_ThreeIsolatedNodes_ReturnsThree()
+    {
+        AddNodes(1, 2, 3);
+
+        var count = await _sut.CountAsync();
+
+        count.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task CountAsync_AfterUnion_ReturnsReducedCount()
+    {
+        AddNodes(1, 2, 3);
+        await _sut.UnionAsync(1, 2);
+
+        var count = await _sut.CountAsync();
+
+        count.Should().Be(2); // {1,2} and {3}
+    }
+
+    // --- RebuildAsync branches ---
+
+    [Fact]
+    public async Task Rebuild_WithDuplicateEdges_SkipsAlreadyConnectedPairs()
+    {
+        AddNodes(1, 2);
+        AddEdge(1, 2);
+        AddEdge(1, 2);
+
+        var act = async () => await _sut.RebuildAsync();
+
+        await act.Should().NotThrowAsync();
+        var nodes = _db.Nodes.ToDictionary(n => n.Id);
+        GetRoot(nodes, 1).Should().Be(GetRoot(nodes, 2));
+    }
+
+    [Fact]
+    public async Task Rebuild_SmallRootUnderLargeRoot_AttachesCorrectly()
+    {
+        // Edge (2,3) processed first → node 2 root with size 2.
+        // Edge (1,2) processed next → root of 1 has size 1 < root of 2 has size 2
+        // → triggers "rootA.Size < rootB.Size" branch → node 1 goes under node 2.
+        AddNodes(1, 2, 3);
+        AddEdge(2, 3);
+        AddEdge(1, 2);
+
+        await _sut.RebuildAsync();
+
+        var nodes = _db.Nodes.ToDictionary(n => n.Id);
+        nodes[1].Parent.Should().Be(2);
+    }
+
     // --- RebuildAsync ---
 
     [Fact]
@@ -156,6 +231,13 @@ public class WeightedPathCompUFServiceTests : IDisposable
         rootOfComponent.Size.Should().Be(2);
         nodes[3].Parent.Should().Be(3);
         nodes[3].Size.Should().Be(1);
+    }
+
+    private static int GetRoot(Dictionary<int, Node> nodes, int id)
+    {
+        while (nodes[id].Parent != id)
+            id = nodes[id].Parent;
+        return id;
     }
 
     public void Dispose()

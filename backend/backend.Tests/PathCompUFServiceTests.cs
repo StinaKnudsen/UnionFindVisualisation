@@ -138,6 +138,18 @@ public class PathCompUFServiceTests : IDisposable
         root3.Should().NotBe(root1);
     }
 
+    // --- FindRoot throw ---
+
+    [Fact]
+    public async Task Union_NodeDoesNotExist_ThrowsException()
+    {
+        AddNodes(1);
+
+        var act = async () => await _sut.UnionAsync(999, 1);
+
+        await act.Should().ThrowAsync<Exception>().WithMessage("*999*");
+    }
+
     private static int GetRoot(Dictionary<int, Node> nodes, int id)
     {
         while (nodes[id].Parent != id)

@@ -123,6 +123,51 @@ public class WeightedUFServiceTests : IDisposable
         nodes[3].Size.Should().Be(1);
     }
 
+    // --- FindRoot throw ---
+
+    [Fact]
+    public async Task Union_NodeDoesNotExist_ThrowsException()
+    {
+        AddNodes(1);
+
+        var act = async () => await _sut.UnionAsync(999, 1);
+
+        await act.Should().ThrowAsync<Exception>().WithMessage("*999*");
+    }
+
+    // --- RebuildAsync branches ---
+
+    [Fact]
+    public async Task Rebuild_WithDuplicateEdges_SkipsAlreadyConnectedPairs()
+    {
+        // Two edges connecting the same nodes — second one hits the `continue` branch
+        AddNodes(1, 2);
+        AddEdge(1, 2);
+        AddEdge(1, 2);
+
+        var act = async () => await _sut.RebuildAsync();
+
+        await act.Should().NotThrowAsync();
+        var nodes = _db.Nodes.ToDictionary(n => n.Id);
+        GetRoot(nodes, 1).Should().Be(GetRoot(nodes, 2));
+    }
+
+    [Fact]
+    public async Task Rebuild_SmallRootUnderLargeRoot_AttachesCorrectly()
+    {
+        // Edge (2,3) is processed first → node 2 becomes root with size 2.
+        // Edge (1,2) is processed next → root of 1 has size 1, root of 2 has size 2
+        // → triggers the "rootA.Size < rootB.Size" branch → node 1 goes under node 2.
+        AddNodes(1, 2, 3);
+        AddEdge(2, 3);
+        AddEdge(1, 2);
+
+        await _sut.RebuildAsync();
+
+        var nodes = _db.Nodes.ToDictionary(n => n.Id);
+        nodes[1].Parent.Should().Be(2); // smaller root attached under larger
+    }
+
     [Fact]
     public async Task Rebuild_WithEdges_ReunionsAndUpdatesSizes()
     {
@@ -140,6 +185,13 @@ public class WeightedUFServiceTests : IDisposable
         // The root of the {1,2} component should have size 2
         var rootNode = nodes.Values.First(n => n.Parent == n.Id && n.Id != 3);
         rootNode.Size.Should().Be(2);
+    }
+
+    private static int GetRoot(Dictionary<int, Node> nodes, int id)
+    {
+        while (nodes[id].Parent != id)
+            id = nodes[id].Parent;
+        return id;
     }
 
     public void Dispose()
