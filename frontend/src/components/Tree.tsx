@@ -111,8 +111,6 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
                   const isFind  = findNodeIds?.has(n.id) ?? false;
                   const isUnion = unionChildId === n.id;
 
-                  if (isUnion) { console.log("union line:", n.id, "->", n.parent); }
-
                   return (
                     <g key={n.id} transform={`translate(${pos.x}, ${pos.y})`}>
                       {isRoot && (

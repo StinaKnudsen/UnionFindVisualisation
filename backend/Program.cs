@@ -1,12 +1,9 @@
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore;
 using backend.infrastructure;
 using Core.Interfaces;
 using backend.infrastructure.Repositories;
 using backend.infrastructure.Services;
 using backend.infrastructure.DTOs;
-using Microsoft.VisualBasic;
 using backend.infrastructure.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,29 +27,29 @@ builder.Services.AddScoped<INodeEdgeRepository, NodeEdgeRepository>();
 builder.Services.AddScoped<NodeEdgeService>();
 builder.Services.AddScoped<UnionFindService>();
 builder.Services.AddScoped<WeightedUFService>();
-builder.Services.AddScoped<WeightedPathCompUFService>();
 builder.Services.AddScoped<PathCompUFService>();
+builder.Services.AddScoped<WeightedPathCompUFService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<DBContext>();
-    db.Database.EnsureDeleted();       // Drop the database
-    db.Database.Migrate();             // Recreate using migrations
+    db.Database.EnsureDeleted();
+    db.Database.Migrate();
 }
 
 app.UseCors("AllowFrontend");
 
 // Helper function to determine which union-find service based on URL parameter
-// UPDATE THE STRINGS WHEN FRONTEND HAS ENDPOINTS
 IUnionFindService DetermineUF(string ufType, IServiceProvider sp) => ufType.ToUpper() switch
 {
     "UF"    => sp.GetRequiredService<UnionFindService>(),
     "WUF"   => sp.GetRequiredService<WeightedUFService>(),
     // add path compression here
+    "PCUF" => sp.GetRequiredService<PathCompUFService>(),
     "WPCUF" => sp.GetRequiredService<WeightedPathCompUFService>(),
-    "PCUF"   => sp.GetRequiredService<PathCompUFService>(),
     _       => throw new ArgumentException($"Unknown algorithm: {ufType}")
 };
 
@@ -124,3 +121,5 @@ app.MapDelete("/api/{ufType}/database/clear", async (string ufType, DBContext db
 });
 
 app.Run();
+
+public partial class Program { }

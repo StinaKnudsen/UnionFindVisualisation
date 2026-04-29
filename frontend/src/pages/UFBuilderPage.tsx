@@ -47,11 +47,7 @@ function getAdjacentNodes(nodes: GraphNode[][], row: number, col: number) {
     
     // Right
     if (col < cols - 1) { adjacent.push({ node: nodes[row][col + 1]}); }
-
-    for(var element of adjacent){
-      console.log("neighbor ids: " + element.node.id);
-      console.log("node row: "+ element.node.row + " node col: " + element.node.col);
-    }
+    
     return adjacent;
 }
 

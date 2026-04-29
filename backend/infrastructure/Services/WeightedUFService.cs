@@ -14,25 +14,18 @@ public class WeightedUFService : IUnionFindService
 
     // Find - walk up parents until we hit a root (Parent == Id)
     // Weighted so should be O(log N)
-    private int FindRoot(int nodeId, Dictionary<int, Node> nodes)
+    public async Task<int> FindAsync(int nodeId)
     {
+        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
+
         if (!nodes.ContainsKey(nodeId))
             throw new Exception($"Node {nodeId} not found");
 
         int current = nodeId;
-
-        // Walk up to root — root is the node where Parent == Id
         while (nodes[current].Parent != current)
             current = nodes[current].Parent;
 
         return current;
-    }
-
-    // Public async wrapper
-    public async Task<int> FindAsync(int nodeId)
-    {
-        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
-        return FindRoot(nodeId, nodes);
     }
 
     // Weighted union — attach smaller tree under larger tree
@@ -41,8 +34,8 @@ public class WeightedUFService : IUnionFindService
     {
         var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
 
-        int rootA = FindRoot(nodeAId, nodes);
-        int rootB = FindRoot(nodeBId, nodes);
+        int rootA = await FindAsync(nodeAId);
+        int rootB = await FindAsync(nodeBId);
 
         // Already connected — nothing to do
         if (rootA == rootB) return false;
@@ -65,20 +58,6 @@ public class WeightedUFService : IUnionFindService
         await _db.SaveChangesAsync();
         return true;
     }
-
-    // Check if two nodes are in the same component
-    public async Task<bool> ConnectedAsync(int nodeAId, int nodeBId)
-    {
-        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
-        return FindRoot(nodeAId, nodes) == FindRoot(nodeBId, nodes);
-    }
-
-    // Count of distinct components (nodes that are their own root)
-    public async Task<int> CountAsync()
-    {
-        return await _db.Nodes.CountAsync(n => n.Parent == n.Id);
-    }
-
     public async Task RebuildAsync()
     {
         // Reset all nodes to be their own root and size 1
@@ -96,8 +75,8 @@ public class WeightedUFService : IUnionFindService
         var allEdges = await _db.Edges.ToListAsync();
         foreach (var edge in allEdges)
         {
-            int rootA = FindRoot(edge.StartNodeId, nodes);
-            int rootB = FindRoot(edge.EndNodeId, nodes);
+            int rootA = await FindAsync(edge.StartNodeId);
+            int rootB = await FindAsync(edge.EndNodeId);
 
             if (rootA == rootB) continue;
 

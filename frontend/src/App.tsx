@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UFBuilderPage from "./pages/UFBuilderPage";
 import Landing from "./pages/landingPage";
 
-
+/*
 // ADD HOMEPAGE ENDPOINT
 function App() {
   return (
@@ -16,3 +16,4 @@ function App() {
 }
 
 export default App;
+*/

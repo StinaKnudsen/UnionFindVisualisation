@@ -136,7 +136,6 @@ body {
 
 .uf-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--uf-shadow-hover);
 }
 
 .uf-card__top-line {
@@ -195,22 +194,6 @@ body {
   stroke-linejoin: round;
 }
 
-.uf-icon--tree {
-  stroke: var(--uf-green);
-}
-
-.uf-icon--tree circle {
-  fill: #31a67d;
-}
-
-.uf-icon--tree circle {
-  fill: #df8f56;
-}
-
-.uf-icon--weight {
-  fill: #204F92
-}
-
 .uf-icon--weight path,
 .uf-icon--weight rect {
   fill: #f6b126;
@@ -229,12 +212,6 @@ body {
 
 .uf-icon--weight rect {
   fill: #2053bc;
-}
-
-.uf-icon--lightning {
-  fill: #f5b126;
-  stroke: #d49312;
-  stroke-width: 1.8;
 }
 
 .uf-card__title {

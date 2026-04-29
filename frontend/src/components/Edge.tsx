@@ -12,15 +12,13 @@ type colorTheme = {
 
 type GraphProps = {
   edge: GraphEdge;
-  onClick?:(edge: GraphEdge) => void;
   theme: colorTheme;
 }
 export function Edge({ edge, theme }: GraphProps) {
     if (!edge) return null;
 
   return (
-     <g
-    >
+    <g>
     <line
       x1={edge.startNode.x}
       y1={edge.startNode.y}
