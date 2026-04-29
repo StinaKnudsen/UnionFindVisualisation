@@ -32,11 +32,12 @@ builder.Services.AddScoped<WeightedPathCompUFService>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<DBContext>();
-    db.Database.EnsureDeleted();       // Drop the database
-    db.Database.Migrate();             // Recreate using migrations
+    db.Database.EnsureDeleted();
+    db.Database.Migrate();
 }
 
 app.UseCors("AllowFrontend");
@@ -120,3 +121,5 @@ app.MapDelete("/api/{ufType}/database/clear", async (string ufType, DBContext db
 });
 
 app.Run();
+
+public partial class Program { }

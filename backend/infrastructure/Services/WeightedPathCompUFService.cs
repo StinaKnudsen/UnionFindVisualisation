@@ -14,18 +14,20 @@ public class WeightedPathCompUFService : IUnionFindService
     // Path-compressing Find — after walking to root,
     // point every node on the path directly to the root.
     // Amortized O(α(N)) — effectively constant.
-    private int FindRoot(int nodeId, Dictionary<int, Node> nodes)
+    public async Task<int> FindAsync(int nodeId)
     {
+        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
+
         if (!nodes.ContainsKey(nodeId))
             throw new Exception($"Node {nodeId} not found");
 
-        // Base case: this node is its own root
         if (nodes[nodeId].Parent == nodeId)
             return nodeId;
 
-        // Recurse to find root, then point current node directly to it
-        int root = FindRoot(nodes[nodeId].Parent, nodes);
-        nodes[nodeId].Parent = root; // <-- path compression
+        int root = await FindAsync(nodes[nodeId].Parent);
+        nodes[nodeId].Parent = root;
+
+        await _db.SaveChangesAsync();
         return root;
     }
 
@@ -33,8 +35,8 @@ public class WeightedPathCompUFService : IUnionFindService
     {
         var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
 
-        int rootA = FindRoot(nodeAId, nodes);
-        int rootB = FindRoot(nodeBId, nodes);
+        int rootA = await FindAsync(nodeAId);
+        int rootB = await FindAsync(nodeBId);
 
         if (rootA == rootB) return false;
 
@@ -53,11 +55,6 @@ public class WeightedPathCompUFService : IUnionFindService
         return true;
     }
 
-    public async Task<int> CountAsync()
-    {
-        return await _db.Nodes.CountAsync(n => n.Parent == n.Id);
-    }
-
     public async Task RebuildAsync()
     {
         var allNodes = await _db.Nodes.ToListAsync();
@@ -73,8 +70,8 @@ public class WeightedPathCompUFService : IUnionFindService
         var allEdges = await _db.Edges.ToListAsync();
         foreach (var edge in allEdges)
         {
-            int rootA = FindRoot(edge.StartNodeId, nodes);
-            int rootB = FindRoot(edge.EndNodeId, nodes);
+            int rootA = await FindAsync(edge.StartNodeId);
+            int rootB = await FindAsync(edge.EndNodeId);
 
             if (rootA == rootB) continue;
 

@@ -213,27 +213,14 @@ var assemblies = [
   {
     "name": "backend",
     "classes": [
-      { "name": "backend.infrastructure.DBContext", "rp": "backend_DBContext.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.infrastructure.DTOs.EdgeDTO", "rp": "backend_EdgeDTO.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.infrastructure.Entities.Edge", "rp": "backend_Edge.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.infrastructure.Entities.Node", "rp": "backend_Node.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.infrastructure.Repositories.NodeEdgeRepository", "rp": "backend_NodeEdgeRepository.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 29, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.infrastructure.Services.NodeEdgeService", "rp": "backend_NodeEdgeService.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 32, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Migrations.AutooIncrementIdEdge", "rp": "backend_AutooIncrementIdEdge.html", "cl": 0, "ucl": 78, "cal": 78, "tl": 124, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Migrations.DBContextModelSnapshot", "rp": "backend_DBContextModelSnapshot.html", "cl": 0, "ucl": 49, "cal": 49, "tl": 71, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Migrations.edgeCreate", "rp": "backend_edgeCreate.html", "cl": 0, "ucl": 142, "cal": 142, "tl": 192, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Migrations.SizeAddedToNode", "rp": "backend_SizeAddedToNode.html", "cl": 0, "ucl": 100, "cal": 100, "tl": 149, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Migrations.UpdatedParentNode", "rp": "backend_UpdatedParentNode.html", "cl": 0, "ucl": 79, "cal": 79, "tl": 125, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Migrations.ZeroIndexedNodes", "rp": "backend_ZeroIndexedNodes.html", "cl": 0, "ucl": 94, "cal": 94, "tl": 138, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Microsoft.AspNetCore.OpenApi.Generated", "rp": "backend_Generated.html", "cl": 0, "ucl": 380, "cal": 380, "tl": 605, "cb": 0, "tb": 204, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "NodeDTO", "rp": "backend_NodeDTO.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PathCompUFService", "rp": "backend_PathCompUFService.html", "cl": 40, "ucl": 0, "cal": 40, "tl": 70, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Program", "rp": "backend_Program.html", "cl": 0, "ucl": 123, "cal": 123, "tl": 159, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "System.Runtime.CompilerServices", "rp": "backend_CompilerServices.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "UnionFindService", "rp": "backend_UnionFindService.html", "cl": 32, "ucl": 0, "cal": 32, "tl": 56, "cb": 9, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "WeatherForecast", "rp": "backend_WeatherForecast.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "WeightedPathCompUFService", "rp": "backend_WeightedPathCompUFService.html", "cl": 60, "ucl": 0, "cal": 60, "tl": 96, "cb": 16, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "WeightedUFService", "rp": "backend_WeightedUFService.html", "cl": 56, "ucl": 0, "cal": 56, "tl": 97, "cb": 16, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "backend.infrastructure.DBContext", "rp": "backend_DBContext.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "backend.infrastructure.Repositories.NodeEdgeRepository", "rp": "backend_NodeEdgeRepository.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "backend.infrastructure.Services.NodeEdgeService", "rp": "backend_NodeEdgeService.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 32, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PathCompUFService", "rp": "backend_PathCompUFService.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 70, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Program", "rp": "backend_Program.html", "cl": 83, "ucl": 6, "cal": 89, "tl": 125, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "UnionFindService", "rp": "backend_UnionFindService.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 56, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "WeightedPathCompUFService", "rp": "backend_WeightedPathCompUFService.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 96, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "WeightedUFService", "rp": "backend_WeightedUFService.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 97, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -242,59 +229,9 @@ var metrics = [{ "name": "Crap Score", "abbreviation": "crp", "explanationUrl": 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
-      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
-      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
 ];
 
 var riskHotspots = [
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "TransformAsync(Microsoft.OpenApi.OpenApiOperation,Microsoft.AspNetCore.OpenApi.OpenApiOperationTransformerContext,System.Threading.CancellationToken)", "methodShortName": "TransformAsync(...)", "fileIndex": 0, "line": 345,
-    "metrics": [
-      { "value": 8556, "exceeded": true },
-      { "value": 92, "exceeded": true },
-    ]},
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "TransformAsync(Microsoft.OpenApi.OpenApiSchema,Microsoft.AspNetCore.OpenApi.OpenApiSchemaTransformerContext,System.Threading.CancellationToken)", "methodShortName": "TransformAsync(...)", "fileIndex": 0, "line": 510,
-    "metrics": [
-      { "value": 1190, "exceeded": true },
-      { "value": 34, "exceeded": true },
-    ]},
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "GetTypeDocId(System.Type,System.Boolean,System.Boolean)", "methodShortName": "GetTypeDocId(...)", "fileIndex": 0, "line": 238,
-    "metrics": [
-      { "value": 812, "exceeded": true },
-      { "value": 28, "exceeded": true },
-    ]},
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "CreateDocumentationId(System.Reflection.MethodInfo)", "methodShortName": "CreateDocumentationId(...)", "fileIndex": 0, "line": 168,
-    "metrics": [
-      { "value": 342, "exceeded": true },
-      { "value": 18, "exceeded": true },
-    ]},
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "CreateDocumentationId(System.Reflection.PropertyInfo)", "methodShortName": "CreateDocumentationId(...)", "fileIndex": 0, "line": 100,
-    "metrics": [
-      { "value": 110, "exceeded": true },
-      { "value": 10, "exceeded": false },
-    ]},
-  {
-    "assembly": "backend", "class": "Program", "reportPath": "backend_Program.html", "methodName": "DetermineUF()", "methodShortName": "DetermineUF()", "fileIndex": 0, "line": 45,
-    "metrics": [
-      { "value": 72, "exceeded": true },
-      { "value": 8, "exceeded": false },
-    ]},
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "NormalizeDocId(System.String)", "methodShortName": "NormalizeDocId(...)", "fileIndex": 0, "line": 320,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "backend", "class": "Microsoft.AspNetCore.OpenApi.Generated", "reportPath": "backend_Generated.html", "methodName": "UnwrapOpenApiParameter(Microsoft.OpenApi.IOpenApiParameter)", "methodShortName": "UnwrapOpenApiParameter(...)", "fileIndex": 0, "line": 483,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
 ];
 
 var branchCoverageAvailable = true;

@@ -14,14 +14,14 @@ public class WeightedUFService : IUnionFindService
 
     // Find - walk up parents until we hit a root (Parent == Id)
     // Weighted so should be O(log N)
-    private int FindRoot(int nodeId, Dictionary<int, Node> nodes)
+    public async Task<int> FindAsync(int nodeId)
     {
+        var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
+
         if (!nodes.ContainsKey(nodeId))
             throw new Exception($"Node {nodeId} not found");
 
         int current = nodeId;
-
-        // Walk up to root — root is the node where Parent == Id
         while (nodes[current].Parent != current)
             current = nodes[current].Parent;
 
@@ -34,8 +34,8 @@ public class WeightedUFService : IUnionFindService
     {
         var nodes = await _db.Nodes.ToDictionaryAsync(n => n.Id);
 
-        int rootA = FindRoot(nodeAId, nodes);
-        int rootB = FindRoot(nodeBId, nodes);
+        int rootA = await FindAsync(nodeAId);
+        int rootB = await FindAsync(nodeBId);
 
         // Already connected — nothing to do
         if (rootA == rootB) return false;
@@ -75,8 +75,8 @@ public class WeightedUFService : IUnionFindService
         var allEdges = await _db.Edges.ToListAsync();
         foreach (var edge in allEdges)
         {
-            int rootA = FindRoot(edge.StartNodeId, nodes);
-            int rootB = FindRoot(edge.EndNodeId, nodes);
+            int rootA = await FindAsync(edge.StartNodeId);
+            int rootB = await FindAsync(edge.EndNodeId);
 
             if (rootA == rootB) continue;
 
