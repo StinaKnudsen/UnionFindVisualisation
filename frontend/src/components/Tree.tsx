@@ -82,7 +82,7 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
               height={svgH + 20}
               viewBox={`0 0 ${svgW} ${svgH}`}
               preserveAspectRatio="xMinYMin meet"
-              style={{ background }}
+              style={{ background, minWidth: svgW }}
             >
               <g transform={`translate(${offsetX}, ${PAD + 20})`}>
                 {nodes.filter(n => n.parent !== n.id).map(n => {
