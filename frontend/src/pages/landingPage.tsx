@@ -82,8 +82,8 @@ export default function UnionFindLanding() {
 
         <UnionCard
           title="Union-Find w. Path Compression"
-          description="How is this a thing?."
-          badgeText="Why is this here"
+          description="See how nodes point directly to the root after each find operation."
+          badgeText="Flattens trees"
           color="orange"
           icon={<img src={Shortcut} className="uf-icon" />}
           onClick={() => navigate("/builder/PCUF")}
@@ -91,7 +91,7 @@ export default function UnionFindLanding() {
 
         <UnionCard
           title="Weighted Union-Find"
-          description="See how balancing keeps trees shallow."
+          description="Learn how balancing keeps trees shallow."
           badgeText="Improves performance"
           color="blue"
           icon={<img src={Scale} className="uf-icon" />}
@@ -100,7 +100,7 @@ export default function UnionFindLanding() {
 
         <UnionCard
           title="Weighted Union-Find w. Path Compression"
-          description="The fastest version for find operations."
+          description="Learn the fastest version for find operations."
           badgeText="Maximum speed"
           color="purple"
           icon={<img src={Lightning} className="uf-icon" />}
