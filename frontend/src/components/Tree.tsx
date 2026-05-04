@@ -80,7 +80,7 @@ export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChild
             <svg
               width="100%"
               height={svgH + 20}
-              viewBox={`0 0 ${svgW} ${svgH}`}
+              viewBox={`0 0 ${svgW} ${svgH + 20}`}
               preserveAspectRatio="xMinYMin meet"
               style={{ background, minWidth: svgW }}
             >
