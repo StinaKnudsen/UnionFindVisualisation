@@ -111,15 +111,14 @@ function UFBuilderPage() {
   const [previewNodeIds, setPreviewNodeIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    fetch(`${BASE}/${UFType}/nodes`)
-      .then(r => r.json())
-      .then((data: NodeDTO[]) => {
-        if (data && data.length > 0) {
-          setUfNodes(data);
-          setDisplayNodes(normalize(data));
-        }
+    fetch(`${BASE}/${UFType}/database/clear`, { method: "DELETE" })
+      .then(() => {
+        setUfNodes([]);
+        setDisplayNodes(Array.from({ length: 49 }, (_, i) => ({ id: i, parent: i })));
+        setEdges([]);
+        setRedoStack([]);
       })
-      .catch(err => console.error("Failed to fetch nodes:", err));
+      .catch(err => console.error("Failed to clear database on load:", err));
   }, [UFType]);
 
   const createEdgeInDb = async (startNodeId: number, endNodeId: number): Promise<{ edgeId: number; updatedNodes: NodeDTO[] }> => {
