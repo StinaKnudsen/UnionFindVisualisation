@@ -47,7 +47,7 @@ function layoutSubtree(
 }
 
 export function Tree({ nodes, background, findNodeIds, findEdgePairs, unionChildId }: Props) {
-  const roots = nodes.filter(n => n.parent === n.id);
+  const roots = nodes.filter(n => n.parent === n.id).sort((a, b) => a.id - b.id);
   const children = buildTrees(nodes);
 
   return (
