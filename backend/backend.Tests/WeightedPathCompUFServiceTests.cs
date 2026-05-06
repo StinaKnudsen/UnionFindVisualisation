@@ -132,36 +132,6 @@ public class WeightedPathCompUFServiceTests : IDisposable
         await act.Should().ThrowAsync<Exception>().WithMessage("*999*");
     }
 
-    // --- CountAsync ---
-
-    [Fact]
-    public async Task CountAsync_NoNodes_ReturnsZero()
-    {
-        var count = await _sut.CountAsync();
-
-        count.Should().Be(0);
-    }
-
-    [Fact]
-    public async Task CountAsync_ThreeIsolatedNodes_ReturnsThree()
-    {
-        AddNodes(1, 2, 3);
-
-        var count = await _sut.CountAsync();
-
-        count.Should().Be(3);
-    }
-
-    [Fact]
-    public async Task CountAsync_AfterUnion_ReturnsReducedCount()
-    {
-        AddNodes(1, 2, 3);
-        await _sut.UnionAsync(1, 2);
-
-        var count = await _sut.CountAsync();
-
-        count.Should().Be(2); // {1,2} and {3}
-    }
 
     // --- RebuildAsync branches ---
 

@@ -216,10 +216,10 @@ var assemblies = [
       { "name": "backend.infrastructure.DBContext", "rp": "backend_DBContext.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.infrastructure.Repositories.NodeEdgeRepository", "rp": "backend_NodeEdgeRepository.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 29, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.infrastructure.Services.NodeEdgeService", "rp": "backend_NodeEdgeService.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 32, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PathCompUFService", "rp": "backend_PathCompUFService.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 70, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Program", "rp": "backend_Program.html", "cl": 83, "ucl": 6, "cal": 89, "tl": 125, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PathCompUFService", "rp": "backend_PathCompUFService.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 72, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Program", "rp": "backend_Program.html", "cl": 95, "ucl": 5, "cal": 100, "tl": 128, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "UnionFindService", "rp": "backend_UnionFindService.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 56, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "WeightedPathCompUFService", "rp": "backend_WeightedPathCompUFService.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 96, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "WeightedPathCompUFService", "rp": "backend_WeightedPathCompUFService.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 93, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "WeightedUFService", "rp": "backend_WeightedUFService.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 97, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
