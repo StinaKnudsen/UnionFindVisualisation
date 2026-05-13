@@ -31,7 +31,12 @@ Once running, a local development URL will appear in the terminal. Click it to o
 
 ### Backend
 
-Navigate to the `/backend` directory:
+Make sure to have the `reportgenerator` .NET package, if not run this command:
+```bash
+dotnet tool install -g dotnet-reportgenerator-globaltool
+```
+
+Navigate to the `/backend/backend.Tests` directory:
 
 ```bash
 dotnet test
