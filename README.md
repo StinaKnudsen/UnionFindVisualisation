@@ -13,6 +13,7 @@ Navigate to the `/backend` directory and run the command:
 ```bash
 dotnet run
 ```
+
 ### Frontend
 
 Navigate to the `/frontend` directory, install the dependencies:
@@ -28,6 +29,44 @@ Once running, a local development URL will appear in the terminal. Click it to o
 
 ## How to run test
 
+### Backend
+
+Navigate to the `/backend` directory:
+
+```bash
+dotnet test
+```
+Generate testing report:
+```bash
+dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+
+reportgenerator -reports:"TestResults/**/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:Html
+```
+
+Open testing report:
+
+Mac:
+```bash
+open coverage-report/index.html
+```
+
+Windows:
+```
+start coverage-report/index.html
+```
+
+
+### Frontend
+
+Navigate to the `/frontend` directory:
+
+```bash
+npm test
+```
+Generate testing report:
+```bash
+npm run coverage
+```
 
 ## Authors
 - Alberte Bülow [@AVNBuelow](https://github.com/AVNBuelow)
