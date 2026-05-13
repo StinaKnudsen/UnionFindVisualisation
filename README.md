@@ -37,7 +37,6 @@ dotnet tool install -g dotnet-reportgenerator-globaltool
 ```
 
 Navigate to the `/backend/backend.Tests` directory:
-
 ```bash
 dotnet test
 ```
@@ -65,6 +64,9 @@ start coverage-report/index.html
 
 Navigate to the `/frontend` directory:
 
+```bash
+npm install
+```
 ```bash
 npm test
 ```
