@@ -49,7 +49,7 @@ describe("UnionFindLanding", () => {
 
   it("renders all four badge texts", () => {
     expect(screen.getByText("Start here")).toBeInTheDocument();
-    expect(screen.getByText("Why is this here")).toBeInTheDocument();
+    expect(screen.getByText("Flattens trees")).toBeInTheDocument();
     expect(screen.getByText("Improves performance")).toBeInTheDocument();
     expect(screen.getByText("Maximum speed")).toBeInTheDocument();
   });

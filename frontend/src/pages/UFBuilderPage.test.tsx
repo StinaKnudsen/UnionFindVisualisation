@@ -114,20 +114,24 @@ describe("UFBuilderPage", () => {
 
   // --- Initial fetch ---
 
-  it("fetches existing nodes on mount using the correct ufType", async () => {
+  it("clears the database on mount using the correct ufType", async () => {
     renderPage("WUF");
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith("http://localhost:5281/api/WUF/nodes");
+      expect(fetch).toHaveBeenCalledWith(
+        "http://localhost:5281/api/WUF/database/clear",
+        expect.objectContaining({ method: "DELETE" })
+      );
     });
   });
 
-  it("fetches nodes for each algorithm type", async () => {
+  it("clears the database on mount for each algorithm type", async () => {
     for (const ufType of ["UF", "WUF", "PCUF", "WPCUF"]) {
       vi.stubGlobal("fetch", mockFetch());
       renderPage(ufType);
       await waitFor(() => {
         expect(fetch).toHaveBeenCalledWith(
-          `http://localhost:5281/api/${ufType}/nodes`
+          `http://localhost:5281/api/${ufType}/database/clear`,
+          expect.objectContaining({ method: "DELETE" })
         );
       });
     }
